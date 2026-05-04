@@ -65,12 +65,12 @@ export default async function FlexPage() {
       <PedagogyNote title="Métier (rappel)">
         <p>
           La <strong>flexibilité</strong> sert l’équilibre offre / demande : un
-          créneau « offre » ou « besoin » s’inscrit dans la logique d’engagements
-          et de prévision vs réalisation (voir{" "}
+          créneau « offre » ou « besoin » s’inscrit dans           la logique d’engagements
+          et de prévision vs réalisation (voir ton dossier{" "}
           <code className="rounded bg-amber-100/60 px-1 text-xs dark:bg-amber-900/40">
-            niche_energie_climate.md
+            docs-energie-climat
           </code>{" "}
-          notions 3–4 et 9–12).
+          — notions 3–4 et 9–12 dans la checklist métier).
         </p>
       </PedagogyNote>
 

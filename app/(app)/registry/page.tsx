@@ -72,11 +72,11 @@ export default async function RegistryPage() {
           l’énergie produite (souvent 1 MWh). Les enjeux de{" "}
           <strong>double comptage</strong> et de{" "}
           <strong>granularité temporelle</strong> (annuel vs horaire) sont
-          centraux pour un vrai registre — ici ce sont des fiches démo (
+          centraux pour un vrai registre — ici ce sont des fiches démo (voir{" "}
           <code className="rounded bg-amber-100/60 px-1 text-xs dark:bg-amber-900/40">
-            niche_energie_climate.md
-          </code>{" "}
-          notions 13–17).
+            docs-energie-climat
+          </code>
+          , notions 13–17).
         </p>
       </PedagogyNote>
 

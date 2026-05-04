@@ -4,6 +4,8 @@ SaaS Web2 **énergie / climat** : flexibilité (créneaux), fiches **REC** péda
 
 > Démo **non réglementaire** : les REC et quantités sont des **exemples** de pilotage, pas un registre national.
 
+Référence métier longue (checklist notions énergie / climat / Web3) : voir le dossier personnel **`docs-energie-climat`** sur ta machine (à côté des autres projets), fichier `niche_energie_climate.md` — volontairement **hors repo** pour garder ce dépôt focalisé code.
+
 ## Stack
 
 - **Next.js** (App Router) + TypeScript + Tailwind
