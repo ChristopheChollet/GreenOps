@@ -21,6 +21,9 @@ greenops/
 # production
 /build
 
+# Docs personnelles (local / PDF hors GitHub — ne pas pousser)
+/docs/
+
 # misc
 .DS_Store
 *.pem
