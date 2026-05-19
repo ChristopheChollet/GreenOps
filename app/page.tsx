@@ -10,7 +10,7 @@ export default async function Home() {
   } = await supabase.auth.getUser();
 
   return (
-    <div className="flex min-h-full flex-col bg-zinc-50 dark:bg-zinc-950">
+    <div className="flex min-h-screen flex-1 flex-col bg-zinc-50 dark:bg-zinc-950">
       <main className="mx-auto flex max-w-3xl flex-1 flex-col justify-center px-4 py-20">
         <p className="text-sm font-medium uppercase tracking-wide text-emerald-700 dark:text-emerald-400">
           GreenOps Console

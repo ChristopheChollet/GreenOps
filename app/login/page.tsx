@@ -9,7 +9,7 @@ export default async function LoginPage({
   const { error: qpError } = await searchParams;
 
   return (
-    <div className="flex min-h-full flex-col items-center justify-center px-4 py-16">
+    <div className="flex min-h-screen flex-1 flex-col items-center justify-center px-4 py-16">
       <div className="w-full max-w-md space-y-8 rounded-xl border border-zinc-200 bg-white p-8 shadow-sm dark:border-zinc-800 dark:bg-zinc-950">
         <div>
           <h1 className="text-2xl font-semibold text-emerald-800 dark:text-emerald-400">

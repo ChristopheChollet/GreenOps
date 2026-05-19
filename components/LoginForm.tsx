@@ -1,31 +1,47 @@
 "use client";
 
-import { useState } from "react";
-import { loginWithMagicLink } from "@/app/login/actions";
+import { useMemo, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 
 export function LoginForm() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
+  const supabase = useMemo(() => createClient(), []);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    const formData = new FormData(form);
+    const email = String(new FormData(form).get("email") ?? "").trim();
     setPending(true);
     setError(null);
     setMessage(null);
-    const res = await loginWithMagicLink(formData);
-    setPending(false);
-    if ("error" in res && res.error) {
-      setError(res.error);
+
+    if (!email) {
+      setError("Email requis");
+      setPending(false);
       return;
     }
-    if ("success" in res && res.success) {
-      setMessage(
-        "Lien envoyé. Vérifiez votre boîte mail (et le dossier spam).",
-      );
+
+    const origin = window.location.origin;
+    const { error: otpError } = await supabase.auth.signInWithOtp({
+      email,
+      options: {
+        emailRedirectTo: `${origin}/auth/callback`,
+      },
+    });
+
+    setPending(false);
+
+    if (otpError) {
+      setError(otpError.message);
+      return;
     }
+
+    setMessage(
+      "Lien envoyé. Vérifiez votre boîte mail (et le dossier spam).",
+    );
   }
 
   return (
