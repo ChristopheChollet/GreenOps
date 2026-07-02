@@ -1,8 +1,8 @@
 name: Keep Supabase Awake
 
 # Free-tier Supabase projects pause after ~7 days without API activity.
-# This pings the REST API every 3 days so the demo never goes cold
-# before a recruiter visits it.
+# This pings the Auth health endpoint every 3 days so the demo never goes
+# cold before a recruiter visits it.
 
 on:
   schedule:
@@ -13,15 +13,20 @@ jobs:
   ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase REST API
+      - name: Ping Supabase (Auth health check)
         run: |
+          # /auth/v1/health only needs the publishable (anon) key on the
+          # `apikey` header — no `Authorization` header. Sending the key as a
+          # Bearer token makes the gateway try to parse it as a JWT and fail,
+          # since publishable/secret keys are not JWTs (see Supabase API
+          # keys docs). The bare `/rest/v1/` root also doesn't work here: it
+          # requires a *secret* key, not the publishable one.
           status=$(curl -s -o /dev/null -w "%{http_code}" \
-            "${SUPABASE_URL}/rest/v1/" \
-            -H "apikey: ${SUPABASE_ANON_KEY}" \
-            -H "Authorization: Bearer ${SUPABASE_ANON_KEY}")
+            "${SUPABASE_URL}/auth/v1/health" \
+            -H "apikey: ${SUPABASE_ANON_KEY}")
           echo "Supabase responded with HTTP $status"
-          if [ "$status" -ge 500 ]; then
-            echo "::warning::Supabase returned a server error ($status) — project may need manual restore."
+          if [ "$status" -ge 400 ]; then
+            echo "::warning::Supabase returned $status — project may need manual restore."
           fi
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
