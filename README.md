@@ -1,10 +1,16 @@
 # GreenOps Console
 
-SaaS Web2 **énergie / climat** : flexibilité (créneaux), fiches **REC** pédagogiques, tableau de bord. Même **vision modulaire** que le flagship Web3 **[GreenChain Common](https://github.com)** (vault / market / registry / gouvernance côté dApp) — ici **sans blockchain**, pour une preuve **full-stack employable** (auth, PostgreSQL, RLS, déploiement).
+SaaS Web2 **énergie / climat** : flexibilité (créneaux), fiches **REC** pédagogiques, tableau de bord. Même **vision modulaire** que le flagship Web3 **[GreenChain Common](https://github.com/ChristopheChollet/GreenChain-Common)** (vault / market / registry / gouvernance côté dApp) — ici **sans blockchain**, pour une preuve **full-stack employable** (auth, PostgreSQL, RLS, déploiement).
 
 > Démo **non réglementaire** : les REC et quantités sont des **exemples** de pilotage, pas un registre national.
 
 Référence métier longue (checklist notions énergie / climat / Web3) : voir le dossier personnel **`docs-energie-climat`** sur ta machine (à côté des autres projets), fichier `niche_energie_climate.md` — volontairement **hors repo** pour garder ce dépôt focalisé code.
+
+## Captures d'écran
+
+| Dashboard | Flexibilité | Registre REC |
+|---|---|---|
+| ![Dashboard](docs/screenshots/dashboard.webp) | ![Flexibilité](docs/screenshots/flex.webp) | ![Registre](docs/screenshots/registry.webp) |
 
 ## Stack
 
@@ -68,8 +74,8 @@ Ouvrir [http://localhost:3000](http://localhost:3000), **Connexion**, recevoir l
 
 - Trésorerie / enveloppes (miroir « Vault » Web2)
 - Votes / propositions (miroir gouvernance)
-- Exports CSV / PDF légers
-- Multi-utilisateurs par organisation (invitations)
+- Export PDF léger (le CSV est déjà disponible sur Flexibilité et Registre REC)
+- Multi-utilisateurs par organisation (invitations) — actuellement 1 organisation par utilisateur à l'inscription
 - Option **Prisma** sur la même base pour le CV
 
 ## Famille de produits
