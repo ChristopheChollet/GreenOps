@@ -22,7 +22,9 @@ greenops/
 /build
 
 # Docs personnelles (local / PDF hors GitHub — ne pas pousser)
-/docs/
+# mais on garde les captures d'écran, elles doivent être visibles sur GitHub
+/docs/*
+!/docs/screenshots/
 
 # misc
 .DS_Store
@@ -34,8 +36,11 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
-.env*
+# env files (real secrets - never commit), but keep the template
+.env
+.env.local
+.env*.local
+!.env.example
 
 # vercel
 .vercel
