@@ -2,6 +2,10 @@ import { createClient } from "@/lib/supabase/server";
 import { getSessionOrg } from "@/lib/auth/org";
 import Link from "next/link";
 import { ReadOnlyBanner } from "@/components/ReadOnlyBanner";
+import { ReportPanel } from "./report-panel";
+import { ChartsPanel } from "./charts-panel";
+import { buildFlexStatusChartData, buildRecSourceChartData } from "@/lib/charts/buildChartData";
+import type { FlexSlotInput, RecCertificateInput } from "@/lib/ai/buildSummary";
 
 export default async function DashboardPage() {
   const session = await getSessionOrg();
@@ -23,6 +27,8 @@ export default async function DashboardPage() {
     { count: recTotal },
     { data: flexRecent },
     { data: recRecent },
+    { data: flexForCharts },
+    { data: recForCharts },
   ] = await Promise.all([
     supabase
       .from("flex_slots")
@@ -49,7 +55,19 @@ export default async function DashboardPage() {
       .eq("org_id", orgId)
       .order("created_at", { ascending: false })
       .limit(5),
+    supabase.from("flex_slots").select("kind, status").eq("org_id", orgId),
+    supabase
+      .from("rec_certificates")
+      .select("source, quantity_mwh")
+      .eq("org_id", orgId),
   ]);
+
+  const flexStatusData = buildFlexStatusChartData(
+    (flexForCharts ?? []) as Pick<FlexSlotInput, "kind" | "status">[],
+  );
+  const recSourceData = buildRecSourceChartData(
+    (recForCharts ?? []) as Pick<RecCertificateInput, "source" | "quantity_mwh">[],
+  );
 
   type FlexRow = {
     id: string;
@@ -135,6 +153,10 @@ export default async function DashboardPage() {
           </ul>
         </div>
       </div>
+
+      <ChartsPanel flexStatusData={flexStatusData} recSourceData={recSourceData} />
+
+      <ReportPanel />
 
       <section>
         <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
