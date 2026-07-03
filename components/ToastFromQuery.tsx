@@ -15,16 +15,13 @@ export function ToastFromQuery() {
   const pathname = usePathname();
   const router = useRouter();
   const toastKey = searchParams.get("toast");
-  const [visible, setVisible] = useState(false);
+  const [dismissedKey, setDismissedKey] = useState<string | null>(null);
   const message = toastKey ? MESSAGES[toastKey] : null;
+  const visible = Boolean(message && dismissedKey !== toastKey);
 
   useEffect(() => {
-    if (!message) {
-      setVisible(false);
-      return;
-    }
-    setVisible(true);
-    const hideTimer = window.setTimeout(() => setVisible(false), 4000);
+    if (!message || !toastKey) return;
+    const hideTimer = window.setTimeout(() => setDismissedKey(toastKey), 4000);
     const cleanTimer = window.setTimeout(() => {
       router.replace(pathname, { scroll: false });
     }, 4200);
@@ -32,7 +29,7 @@ export function ToastFromQuery() {
       window.clearTimeout(hideTimer);
       window.clearTimeout(cleanTimer);
     };
-  }, [message, pathname, router]);
+  }, [message, toastKey, pathname, router]);
 
   if (!visible || !message) return null;
 

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { SignOutButton } from "@/components/SignOutButton";
 import { NavLinks } from "@/components/NavLinks";
 import { ThemeToggle } from "@/components/ThemeToggle";

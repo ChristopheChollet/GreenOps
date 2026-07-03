@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 const MESSAGES: Record<string, string> = {
   "flex-time-order":
@@ -18,22 +18,17 @@ export function FormErrorFromQuery() {
   const pathname = usePathname();
   const router = useRouter();
   const errorKey = searchParams.get("error");
-  const [visible, setVisible] = useState(false);
   const message = errorKey ? MESSAGES[errorKey] : null;
 
   useEffect(() => {
-    if (!message) {
-      setVisible(false);
-      return;
-    }
-    setVisible(true);
+    if (!message) return;
     const cleanTimer = window.setTimeout(() => {
       router.replace(pathname, { scroll: false });
     }, 8000);
     return () => window.clearTimeout(cleanTimer);
   }, [message, pathname, router]);
 
-  if (!visible || !message) return null;
+  if (!message) return null;
 
   return (
     <div className="alert-error mb-4" role="alert">
