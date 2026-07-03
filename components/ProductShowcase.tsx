@@ -4,17 +4,22 @@ const shots = [
   {
     src: "/screenshots/dashboard.webp",
     title: "Tableau de bord",
-    alt: "Capture du tableau de bord GreenOps : KPI flex et REC, graphiques et activité récente",
+    alt: "Capture du tableau de bord GreenOps : KPI, graphiques et export PDF",
   },
   {
     src: "/screenshots/flex.webp",
     title: "Flexibilité",
-    alt: "Capture du module flexibilité : créneaux offre et besoin avec statuts et export CSV",
+    alt: "Capture du module flexibilité : créneaux, édition inline et export CSV",
   },
   {
     src: "/screenshots/registry.webp",
     title: "Registre REC",
-    alt: "Capture du registre REC : fiches pédagogiques avec volumes MWh et traçabilité",
+    alt: "Capture du registre REC : fiches, volumes MWh et audit",
+  },
+  {
+    src: "/screenshots/equipe.webp",
+    title: "Équipe",
+    alt: "Capture de la page Équipe : membres et invitations par e-mail",
   },
 ];
 

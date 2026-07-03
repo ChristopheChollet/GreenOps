@@ -8,9 +8,9 @@ Référence métier longue (checklist notions énergie / climat / Web3) : voir l
 
 ## Captures d'écran
 
-| Dashboard | Flexibilité | Registre REC |
-|---|---|---|
-| ![Dashboard](docs/screenshots/dashboard.webp) | ![Flexibilité](docs/screenshots/flex.webp) | ![Registre](docs/screenshots/registry.webp) |
+| Dashboard | Flexibilité | Registre REC | Équipe |
+|---|---|---|---|
+| ![Dashboard](docs/screenshots/dashboard.webp) | ![Flexibilité](docs/screenshots/flex.webp) | ![Registre REC](docs/screenshots/registre.webp) | ![Équipe](docs/screenshots/equipe.webp) |
 
 ## Stack
 
