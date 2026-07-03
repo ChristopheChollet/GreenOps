@@ -131,7 +131,7 @@ export default async function FlexPage() {
               <textarea name="notes" rows={2} className="input-field" />
             </div>
             <div className="sm:col-span-2">
-              <button type="submit" className="btn-primary">
+              <button type="submit" className="btn-primary px-4 py-2 text-sm">
                 Enregistrer
               </button>
             </div>
@@ -249,7 +249,7 @@ export default async function FlexPage() {
                           />
                         </div>
                         <div className="sm:col-span-2">
-                          <button type="submit" className="btn-primary">
+                          <button type="submit" className="btn-primary px-4 py-2 text-sm">
                             Mettre à jour
                           </button>
                         </div>

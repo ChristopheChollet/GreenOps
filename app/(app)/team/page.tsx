@@ -101,7 +101,7 @@ export default async function TeamPage() {
                 <option value="admin">Administrateur</option>
               </select>
             </div>
-            <button type="submit" className="btn-primary">
+            <button type="submit" className="btn-primary px-4 py-2 text-sm">
               Envoyer l’invitation
             </button>
           </form>

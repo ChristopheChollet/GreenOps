@@ -11,7 +11,7 @@ export async function AppNav() {
 
   return (
     <header className="app-nav site-header" role="banner">
-      <div className="app-nav-bar site-header-bar mx-auto max-w-5xl px-4">
+      <div className="app-nav-bar site-header-bar mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4">
         <BrandLockup href="/" />
         <div className="app-nav-scroll min-w-0">
           <NavLinks />

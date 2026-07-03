@@ -73,7 +73,7 @@ export function LoginForm() {
       <button
         type="submit"
         disabled={pending}
-        className="btn-primary w-full"
+        className="btn-primary w-full px-4 py-2.5 text-sm"
       >
         {pending ? "Envoi…" : "Recevoir le lien"}
       </button>

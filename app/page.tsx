@@ -62,15 +62,16 @@ export default async function Home() {
   } = await supabase.auth.getUser();
   const repoUrl = getRepoUrl();
   const ctaHref = user ? "/dashboard" : "/login";
-  const ctaLabel = user ? "Ouvrir l'app" : "Essayer la démo";
+  const ctaLabel = user ? "Ouvrir le tableau de bord" : "Essayer la démo";
 
   return (
     <div className="app-canvas flex min-h-screen flex-col">
       <SiteHeader />
 
-      <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 pb-16 pt-4 sm:pt-6">
-        <section className="landing-hero-split">
-          <div className="landing-hero-copy motion-fade-up min-w-0">
+      <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
+        <div className="pb-16">
+          <section className="landing-hero-split pb-16 pt-4 sm:pt-8">
+            <div className="landing-hero-copy motion-fade-up min-w-0">
             <p className="landing-eyebrow">Product engineer · Énergie &amp; climat</p>
             <h1 className="landing-title">
               Pilotage ops
@@ -83,7 +84,7 @@ export default async function Home() {
               (data mix &amp; carbone), orienté ops énergie / climat.
             </p>
             <div className="landing-hero-cta">
-              <Link href={ctaHref} className="btn-primary px-6 py-2.5 text-sm">
+              <Link href={ctaHref} className="btn-primary border border-transparent px-6 py-2.5 text-sm">
                 {ctaLabel}
               </Link>
               <a
@@ -102,13 +103,13 @@ export default async function Home() {
                 </li>
               ))}
             </ul>
-          </div>
-          <div className="min-w-0">
-            <HeroLivePreview />
-          </div>
-        </section>
+            </div>
+            <div className="min-w-0">
+              <HeroLivePreview />
+            </div>
+          </section>
 
-        <section
+          <section
           className="landing-modules motion-fade-up motion-stagger-2"
           aria-labelledby="features-heading"
         >
@@ -142,7 +143,8 @@ export default async function Home() {
               );
             })}
           </ul>
-        </section>
+          </section>
+        </div>
       </main>
 
       <AppFooter />
