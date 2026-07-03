@@ -16,7 +16,6 @@ Référence métier longue (checklist notions énergie / climat / Web3) : voir l
 
 - **Next.js** (App Router) + TypeScript + Tailwind
 - **Supabase** : Auth (magic link), PostgreSQL, **Row Level Security**
-- **IA** : rapport exécutif généré à la volée (Google `gemini-2.5-flash` via [Vercel AI SDK](https://ai-sdk.dev/), réponse en streaming, palier gratuit) à partir des KPIs flex/REC de l'organisation
 - **Vercel** (recommandé) + variables d’environnement publiques Supabase
 
 ## Démarrage local
@@ -45,7 +44,6 @@ Référence métier longue (checklist notions énergie / climat / Web3) : voir l
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `NEXT_PUBLIC_SITE_URL` (ex. `http://localhost:3000`)
-   - `GOOGLE_GENERATIVE_AI_API_KEY` (optionnel — active le rapport IA du tableau de bord, clé gratuite sur [aistudio.google.com/apikey](https://aistudio.google.com/apikey) ; sans elle, le bouton affiche un message d'indisponibilité au lieu de planter)
 
 5. Installer et lancer :
 
@@ -65,9 +63,9 @@ Ouvrir [http://localhost:3000](http://localhost:3000), **Connexion**, recevoir l
 ## Parcours démo (~2 min)
 
 1. Connexion magic link.  
-2. **Flexibilité** : encadré métier, créer un créneau (offre / besoin, statut), voir la piste d’audit sous la carte, **Exporter CSV** si au moins une ligne.  
-3. **Registre REC** : encadré REC / double comptage, fiche, audit, export CSV.  
-4. **Tableau de bord** : KPI + **rapport IA** (bouton « Générer le rapport », synthèse en streaming) + activité récente.  
+2. **Flexibilité** : créer un créneau (offre / besoin, statut), voir la piste d’audit sous la carte, **Exporter CSV** si au moins une ligne.  
+3. **Registre REC** : créer une fiche, audit, export CSV.  
+4. **Tableau de bord** : KPI, graphiques et activité récente.  
 5. (Optionnel) Rôle **viewer** : dans le SQL Editor,  
    `update public.profiles set role = 'viewer' where user_id = '…';`  
    (uuid depuis **Authentication → Users**) — l’UI passe en lecture seule ; remettre `'admin'` pour éditer à nouveau.

@@ -4,6 +4,8 @@ import { createClient } from "@/lib/supabase/server";
 import { getSessionOrgId } from "@/lib/auth/org";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { flexSlotTimeErrorKey } from "@/lib/flex/validate";
 
 export async function createFlexSlot(formData: FormData) {
   await requireAdmin();
@@ -17,7 +19,14 @@ export async function createFlexSlot(formData: FormData) {
   const powerKw = formData.get("power_kw");
   const notes = formData.get("notes");
 
-  if (!startAt || !endAt) throw new Error("Dates requises");
+  if (!startAt || !endAt) {
+    redirect("/flex?error=flex-invalid-dates");
+  }
+
+  const timeError = flexSlotTimeErrorKey(startAt, endAt);
+  if (timeError) {
+    redirect(`/flex?error=${timeError}`);
+  }
 
   const supabase = await createClient();
   const { error } = await supabase.from("flex_slots").insert({
@@ -30,9 +39,15 @@ export async function createFlexSlot(formData: FormData) {
     notes: notes ? String(notes) : null,
   });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.message.includes("flex_time_order")) {
+      redirect("/flex?error=flex-time-order");
+    }
+    redirect("/flex?error=flex-save");
+  }
   revalidatePath("/flex");
   revalidatePath("/dashboard");
+  redirect("/flex?toast=flex-created");
 }
 
 export async function deleteFlexSlot(id: string) {
@@ -50,4 +65,5 @@ export async function deleteFlexSlot(id: string) {
   if (error) throw new Error(error.message);
   revalidatePath("/flex");
   revalidatePath("/dashboard");
+  redirect("/flex?toast=flex-deleted");
 }

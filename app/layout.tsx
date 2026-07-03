@@ -1,5 +1,7 @@
+import Script from "next/script";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -13,9 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "GreenOps Console — SaaS énergie / climat",
+  title: "GreenOps — Console SaaS énergie & climat",
   description:
-    "Portail Web2 flexibilité, REC et pilotage — famille de produits GreenChain Common.",
+    "Pilotage flexibilité et registre REC — démo portfolio niche énergie / climat.",
 };
 
 export default function RootLayout({
@@ -26,10 +28,20 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} min-h-full antialiased`}
     >
-      <body className="flex min-h-screen flex-col bg-background text-foreground">
-        {children}
+      <head>
+        <Script
+          id="greenops-theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var k='greenops-theme',t=localStorage.getItem(k)||'light',r=document.documentElement;r.classList.remove('light','dark');if(t==='light'||t==='dark')r.classList.add(t);else r.classList.add('light');}catch(e){document.documentElement.classList.add('light');}})();`,
+          }}
+        />
+      </head>
+      <body className="app-canvas flex min-h-screen flex-col antialiased">
+        <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
   );

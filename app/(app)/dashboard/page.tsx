@@ -2,10 +2,13 @@ import { createClient } from "@/lib/supabase/server";
 import { getSessionOrg } from "@/lib/auth/org";
 import Link from "next/link";
 import { ReadOnlyBanner } from "@/components/ReadOnlyBanner";
-import { ReportPanel } from "./report-panel";
+import { PageHeader } from "@/components/PageHeader";
+import { StatGrid } from "@/components/StatGrid";
+import { EmptyState } from "@/components/EmptyState";
+import { ActivityModuleBadge } from "@/components/StatusBadge";
 import { ChartsPanel } from "./charts-panel";
 import { buildFlexStatusChartData, buildRecSourceChartData } from "@/lib/charts/buildChartData";
-import type { FlexSlotInput, RecCertificateInput } from "@/lib/ai/buildSummary";
+import type { FlexSlotInput, RecCertificateInput } from "@/lib/ops/types";
 
 export default async function DashboardPage() {
   const session = await getSessionOrg();
@@ -86,99 +89,83 @@ export default async function DashboardPage() {
   const flexRows = (flexRecent ?? []) as FlexRow[];
   const recRows = (recRecent ?? []) as RecRow[];
 
-  const activity: { label: string; at: string; href: string }[] = [
+  const activity: {
+    label: string;
+    at: string;
+    href: string;
+    module: "flex" | "rec";
+  }[] = [
     ...flexRows.map((r) => ({
-      label: `Flex ${r.kind} · ${r.status}`,
+      label: `${r.kind} · ${r.status}`,
       at: r.created_at,
       href: "/flex",
+      module: "flex" as const,
     })),
     ...recRows.map((r) => ({
-      label: `REC · ${r.label}`,
+      label: r.label,
       at: r.created_at,
       href: "/registry",
+      module: "rec" as const,
     })),
   ]
     .sort((a, b) => new Date(b.at).getTime() - new Date(a.at).getTime())
     .slice(0, 8);
 
   return (
-    <div className="space-y-10">
-      <div>
-        <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-          Tableau de bord
-        </h1>
-        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-          Pilotage flexibilité et attestations REC (démo Web2, non
-          réglementaire).
-        </p>
-      </div>
+    <div className="space-y-8">
+      <PageHeader
+        module="dashboard"
+        eyebrow="Pilotage"
+        title="Tableau de bord"
+        description="Pilotage flexibilité et attestations REC (démo Web2, non réglementaire)."
+      />
 
       {session?.role === "viewer" && <ReadOnlyBanner />}
 
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/50">
-          <p className="text-sm text-zinc-500">Créneaux flex (total)</p>
-          <p className="mt-1 text-2xl font-semibold tabular-nums">
-            {flexTotal ?? 0}
-          </p>
-          <p className="mt-2 text-xs text-zinc-500">
-            Ouverts : {flexOpen ?? 0}
-          </p>
-        </div>
-        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/50">
-          <p className="text-sm text-zinc-500">Fiches REC</p>
-          <p className="mt-1 text-2xl font-semibold tabular-nums">
-            {recTotal ?? 0}
-          </p>
-        </div>
-        <div className="rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/50">
-          <p className="text-sm text-zinc-500">Actions rapides</p>
-          <ul className="mt-2 space-y-2 text-sm">
-            <li>
-              <Link
-                href="/flex"
-                className="text-emerald-700 hover:underline dark:text-emerald-400"
-              >
-                Nouveau créneau flex
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/registry"
-                className="text-emerald-700 hover:underline dark:text-emerald-400"
-              >
-                Nouvelle fiche REC
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
+      <StatGrid
+        items={[
+          {
+            label: "Créneaux flex",
+            value: flexTotal ?? 0,
+            hint: `${flexOpen ?? 0} ouvert(s)`,
+            tone: "ok",
+          },
+          {
+            label: "Fiches REC",
+            value: recTotal ?? 0,
+            tone: recTotal ? "default" : "warn",
+          },
+          {
+            label: "Organisation",
+            value: session?.role === "viewer" ? "Viewer" : "Admin",
+            hint: "Rôle actif",
+          },
+        ]}
+      />
 
       <ChartsPanel flexStatusData={flexStatusData} recSourceData={recSourceData} />
 
-      <ReportPanel />
-
       <section>
-        <h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
-          Activité récente
-        </h2>
+        <h2 className="text-lg font-medium text-primary">Activité récente</h2>
         {activity.length === 0 ? (
-          <p className="mt-2 text-sm text-zinc-500">
-            Aucun enregistrement pour l’instant.
-          </p>
+          <EmptyState
+            module="dashboard"
+            title="Aucune activité pour l’instant"
+            description="Créez un créneau flex ou une fiche REC pour alimenter le tableau de bord."
+            actionHref="/flex"
+            actionLabel="Créer un créneau flex"
+          />
         ) : (
-          <ul className="mt-3 divide-y divide-zinc-200 rounded-xl border border-zinc-200 bg-white dark:divide-zinc-800 dark:border-zinc-800 dark:bg-zinc-900/50">
+          <ul className="activity-list">
             {activity.map((a, i) => (
-              <li
-                key={`${a.at}-${i}`}
-                className="flex items-center justify-between gap-4 px-4 py-3 text-sm"
-              >
-                <span className="text-zinc-800 dark:text-zinc-200">
-                  {a.label}
-                </span>
-                <span className="shrink-0 text-zinc-500">
+              <li key={`${a.at}-${i}`} className="activity-item">
+                <Link href={a.href} className="activity-item-label hover:underline">
+                  <ActivityModuleBadge module={a.module} />
+                  <span>{a.label}</span>
+                </Link>
+                <time className="shrink-0 text-xs text-muted" dateTime={a.at}>
                   {new Date(a.at).toLocaleString("fr-FR")}
-                </span>
+                </time>
               </li>
             ))}
           </ul>

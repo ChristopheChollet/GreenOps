@@ -1,14 +1,17 @@
 import { createClient } from "@/lib/supabase/server";
 import { getSessionOrg } from "@/lib/auth/org";
+import { Suspense } from "react";
 import {
   createRecCertificate,
   deleteRecCertificate,
 } from "@/lib/registry/actions";
+import { FormErrorFromQuery } from "@/components/FormErrorFromQuery";
 import { exportRecCertificatesCsv } from "@/lib/export/actions";
-import { PedagogyNote } from "@/components/PedagogyNote";
 import { CsvDownloadButton } from "@/components/CsvDownloadButton";
 import { AuditMeta } from "@/components/AuditMeta";
 import { ReadOnlyBanner } from "@/components/ReadOnlyBanner";
+import { PageHeader } from "@/components/PageHeader";
+import { EmptyState } from "@/components/EmptyState";
 
 type RecRow = {
   id: string;
@@ -42,115 +45,94 @@ export default async function RegistryPage() {
     .order("created_at", { ascending: false });
 
   const certs = (rows ?? []) as RecRow[];
+  const totalMwh = certs.reduce((sum, c) => sum + (c.quantity_mwh ?? 0), 0);
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-            Registre REC (Web2)
-          </h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Fiches pédagogiques — pas un registre national. Miroir narratif du
-            module Registry de GreenChain Common.
-          </p>
-        </div>
-        {certs.length > 0 && (
-          <CsvDownloadButton
-            label="Exporter CSV"
-            filename="greenops-rec-certificates.csv"
-            exportFn={exportRecCertificatesCsv}
-          />
-        )}
-      </div>
+      <PageHeader
+        module="registry"
+        eyebrow="Registre"
+        title="Registre REC (Web2)"
+        description="Fiches pédagogiques — pas un registre national. Traçabilité et audit pour la démo ops."
+        actions={
+          certs.length > 0 ? (
+            <CsvDownloadButton
+              label="Exporter CSV"
+              filename="greenops-rec-certificates.csv"
+              exportFn={exportRecCertificatesCsv}
+            />
+          ) : undefined
+        }
+      />
 
       {session?.role === "viewer" && <ReadOnlyBanner />}
 
-      <PedagogyNote title="REC & traçabilité (rappel)">
-        <p>
-          Un certificat type <strong>GO / REC</strong> attache des attributs à de
-          l’énergie produite (souvent 1 MWh). Les enjeux de{" "}
-          <strong>double comptage</strong> et de{" "}
-          <strong>granularité temporelle</strong> (annuel vs horaire) sont
-          centraux pour un vrai registre — ici ce sont des fiches démo (voir{" "}
-          <code className="rounded bg-amber-100/60 px-1 text-xs dark:bg-amber-900/40">
-            docs-energie-climat
-          </code>
-          , notions 13–17).
+      {certs.length > 0 && (
+        <p className="text-sm text-muted">
+          {certs.length} fiche(s) · {totalMwh.toLocaleString("fr-FR")} MWh déclarés
         </p>
-      </PedagogyNote>
+      )}
 
       {isAdmin && (
-        <section className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900/50">
-          <h2 className="text-lg font-medium">Nouvelle fiche</h2>
+        <section className="section-card">
+          <Suspense fallback={null}>
+            <FormErrorFromQuery />
+          </Suspense>
+          <h2 className="text-lg font-medium text-primary">Nouvelle fiche</h2>
           <form
             action={createRecCertificate}
             className="mt-4 grid gap-4 sm:grid-cols-2"
           >
-            <div className="sm:col-span-2">
-              <label className="mb-1 block text-sm">Libellé</label>
-              <input
-                name="label"
-                required
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
-              />
+            <div className="form-field sm:col-span-2">
+              <label className="form-label">Libellé</label>
+              <input name="label" required className="input-field" />
             </div>
-            <div>
-              <label className="mb-1 block text-sm">Période début</label>
+            <div className="form-field">
+              <label className="form-label">Période début</label>
               <input
                 type="date"
                 name="period_start"
                 required
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+                className="input-field"
               />
             </div>
-            <div>
-              <label className="mb-1 block text-sm">Période fin</label>
+            <div className="form-field">
+              <label className="form-label">Période fin</label>
               <input
                 type="date"
                 name="period_end"
                 required
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+                className="input-field"
               />
             </div>
-            <div>
-              <label className="mb-1 block text-sm">Source / producteur</label>
-              <input
-                name="source"
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
-              />
+            <div className="form-field">
+              <label className="form-label">Source / producteur</label>
+              <input name="source" className="input-field" />
             </div>
-            <div>
-              <label className="mb-1 block text-sm">Quantité (MWh)</label>
+            <div className="form-field">
+              <label className="form-label">Quantité (MWh)</label>
               <input
                 type="number"
                 name="quantity_mwh"
                 step="0.001"
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+                className="input-field"
               />
             </div>
-            <div className="sm:col-span-2">
-              <label className="mb-1 block text-sm">URL document (PDF)</label>
+            <div className="form-field sm:col-span-2">
+              <label className="form-label">URL document (PDF)</label>
               <input
                 type="url"
                 name="document_url"
                 placeholder="https://…"
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+                className="input-field"
               />
             </div>
-            <div className="sm:col-span-2">
-              <label className="mb-1 block text-sm">Notes</label>
-              <textarea
-                name="notes"
-                rows={2}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
-              />
+            <div className="form-field sm:col-span-2">
+              <label className="form-label">Notes</label>
+              <textarea name="notes" rows={2} className="input-field" />
             </div>
             <div className="sm:col-span-2">
-              <button
-                type="submit"
-                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-              >
+              <button type="submit" className="btn-primary">
                 Enregistrer
               </button>
             </div>
@@ -159,40 +141,44 @@ export default async function RegistryPage() {
       )}
 
       <section>
-        <h2 className="text-lg font-medium">Fiches</h2>
+        <h2 className="text-lg font-medium text-primary">Fiches</h2>
         {certs.length === 0 ? (
-          <p className="mt-2 text-sm text-zinc-500">Aucune fiche.</p>
+          <EmptyState
+            module="registry"
+            title="Aucune fiche REC"
+            description={
+              isAdmin
+                ? "Créez une fiche pédagogique pour documenter un certificat ou un lot REC de démonstration."
+                : "Aucune fiche n’a encore été enregistrée pour cette organisation."
+            }
+          />
         ) : (
-          <ul className="mt-3 space-y-3">
+          <ul className="card-grid mt-3">
             {certs.map((c) => (
               <li
                 key={c.id}
-                className="flex flex-wrap items-start justify-between gap-4 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/50"
+                className="section-card section-card-hover flex flex-wrap items-start justify-between gap-4"
               >
-                <div className="text-sm">
-                  <p className="font-medium">{c.label}</p>
-                  <p className="text-zinc-600 dark:text-zinc-400">
+                <div className="card-body">
+                  <p className="card-title">{c.label}</p>
+                  <p className="mt-1">
                     {c.period_start} → {c.period_end}
                   </p>
-                  {c.source && (
-                    <p className="text-zinc-500">Source : {c.source}</p>
-                  )}
+                  {c.source && <p className="mt-1 text-muted">Source : {c.source}</p>}
                   {c.quantity_mwh != null && (
-                    <p className="text-zinc-500">{c.quantity_mwh} MWh</p>
+                    <p className="mt-1 card-body-strong">{c.quantity_mwh} MWh</p>
                   )}
                   {c.document_url && (
                     <a
                       href={c.document_url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-1 inline-block text-emerald-700 hover:underline dark:text-emerald-400"
+                      className="link-accent mt-2 inline-block"
                     >
-                      Document
+                      Document →
                     </a>
                   )}
-                  {c.notes && (
-                    <p className="mt-1 text-zinc-600">{c.notes}</p>
-                  )}
+                  {c.notes && <p className="mt-2">{c.notes}</p>}
                   <AuditMeta
                     created_at={c.created_at}
                     updated_at={c.updated_at ?? c.created_at}
@@ -205,6 +191,7 @@ export default async function RegistryPage() {
                     <button
                       type="submit"
                       className="text-sm text-red-600 hover:underline dark:text-red-400"
+                      aria-label={`Supprimer la fiche ${c.label}`}
                     >
                       Supprimer
                     </button>

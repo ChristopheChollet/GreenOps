@@ -3,7 +3,7 @@ import type {
   FlexSlotInput,
   FlexStatus,
   RecCertificateInput,
-} from "@/lib/ai/buildSummary";
+} from "@/lib/ops/types";
 
 export type FlexStatusChartRow = {
   status: FlexStatus;

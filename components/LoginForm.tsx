@@ -46,8 +46,8 @@ export function LoginForm() {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="email" className="mb-1 block text-sm font-medium">
+      <div className="form-field">
+        <label htmlFor="email" className="form-label">
           Email
         </label>
         <input
@@ -56,22 +56,24 @@ export function LoginForm() {
           type="email"
           required
           autoComplete="email"
-          className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-900 outline-none ring-emerald-500 focus:ring-2 dark:border-zinc-600 dark:bg-zinc-900 dark:text-zinc-100"
+          className="input-field"
           placeholder="vous@exemple.com"
         />
       </div>
       {error && (
-        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+        <p className="text-sm text-red-600 dark:text-red-400" role="alert">
+          {error}
+        </p>
       )}
       {message && (
-        <p className="text-sm text-emerald-700 dark:text-emerald-400">
+        <p className="text-sm text-emerald-700 dark:text-emerald-400" role="status">
           {message}
         </p>
       )}
       <button
         type="submit"
         disabled={pending}
-        className="w-full rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-emerald-700 disabled:opacity-60"
+        className="btn-primary w-full"
       >
         {pending ? "Envoi…" : "Recevoir le lien"}
       </button>

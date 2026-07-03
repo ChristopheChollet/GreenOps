@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { buildFlexStatusChartData, buildRecSourceChartData } from "./buildChartData";
-import type { FlexSlotInput, RecCertificateInput } from "@/lib/ai/buildSummary";
+import type { FlexSlotInput, RecCertificateInput } from "@/lib/ops/types";
 
 describe("buildFlexStatusChartData", () => {
   it("returns all three statuses with zero counts for empty input", () => {

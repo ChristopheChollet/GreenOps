@@ -1,11 +1,15 @@
 import { createClient } from "@/lib/supabase/server";
 import { getSessionOrg } from "@/lib/auth/org";
+import { Suspense } from "react";
 import { createFlexSlot, deleteFlexSlot } from "@/lib/flex/actions";
+import { FormErrorFromQuery } from "@/components/FormErrorFromQuery";
 import { exportFlexSlotsCsv } from "@/lib/export/actions";
-import { PedagogyNote } from "@/components/PedagogyNote";
 import { CsvDownloadButton } from "@/components/CsvDownloadButton";
 import { AuditMeta } from "@/components/AuditMeta";
 import { ReadOnlyBanner } from "@/components/ReadOnlyBanner";
+import { PageHeader } from "@/components/PageHeader";
+import { EmptyState } from "@/components/EmptyState";
+import { FlexKindBadge, FlexStatusBadge } from "@/components/StatusBadge";
 
 type FlexSlot = {
   id: string;
@@ -38,110 +42,95 @@ export default async function FlexPage() {
     .order("start_at", { ascending: false });
 
   const slots = (rows ?? []) as FlexSlot[];
+  const openCount = slots.filter((s) => s.status === "open").length;
 
   return (
     <div className="space-y-8">
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-semibold text-zinc-900 dark:text-zinc-50">
-            Flexibilité
-          </h1>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-            Offres et besoins de créneaux (miroir Web2 du marché flex GreenChain
-            Common).
-          </p>
-        </div>
-        {slots.length > 0 && (
-          <CsvDownloadButton
-            label="Exporter CSV"
-            filename="greenops-flex-slots.csv"
-            exportFn={exportFlexSlotsCsv}
-          />
-        )}
-      </div>
+      <PageHeader
+        module="flex"
+        eyebrow="Flexibilité"
+        title="Flexibilité"
+        description="Offres et besoins de créneaux — pilotage ops Web2 sur la niche énergie / climat."
+        actions={
+          slots.length > 0 ? (
+            <CsvDownloadButton
+              label="Exporter CSV"
+              filename="greenops-flex-slots.csv"
+              exportFn={exportFlexSlotsCsv}
+            />
+          ) : undefined
+        }
+      />
 
       {session?.role === "viewer" && <ReadOnlyBanner />}
 
-      <PedagogyNote title="Métier (rappel)">
-        <p>
-          La <strong>flexibilité</strong> sert l’équilibre offre / demande : un
-          créneau « offre » ou « besoin » s’inscrit dans           la logique d’engagements
-          et de prévision vs réalisation (voir ton dossier{" "}
-          <code className="rounded bg-amber-100/60 px-1 text-xs dark:bg-amber-900/40">
-            docs-energie-climat
-          </code>{" "}
-          — notions 3–4 et 9–12 dans la checklist métier).
+      {slots.length > 0 && (
+        <p className="text-sm text-muted">
+          {slots.length} créneau(x) · {openCount} ouvert(s)
         </p>
-      </PedagogyNote>
+      )}
 
       {isAdmin && (
-        <section className="rounded-xl border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-900/50">
-          <h2 className="text-lg font-medium">Nouveau créneau</h2>
+        <section className="section-card">
+          <Suspense fallback={null}>
+            <FormErrorFromQuery />
+          </Suspense>
+          <h2 className="text-lg font-medium text-primary">Nouveau créneau</h2>
+          <p className="mt-1 text-xs text-muted">
+            La fin doit être strictement après le début (ex. début 14:00 → fin 16:00).
+          </p>
           <form
             action={createFlexSlot}
             className="mt-4 grid gap-4 sm:grid-cols-2"
           >
-            <div>
-              <label className="mb-1 block text-sm">Type</label>
-              <select
-                name="kind"
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
-              >
+            <div className="form-field">
+              <label className="form-label">Type</label>
+              <select name="kind" className="input-field">
                 <option value="offer">Offre</option>
                 <option value="need">Besoin</option>
               </select>
             </div>
-            <div>
-              <label className="mb-1 block text-sm">Statut</label>
-              <select
-                name="status"
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
-              >
+            <div className="form-field">
+              <label className="form-label">Statut</label>
+              <select name="status" className="input-field">
                 <option value="draft">Brouillon</option>
                 <option value="open">Ouvert</option>
                 <option value="matched">Matché</option>
               </select>
             </div>
-            <div>
-              <label className="mb-1 block text-sm">Début</label>
+            <div className="form-field">
+              <label className="form-label">Début</label>
               <input
                 type="datetime-local"
                 name="start_at"
                 required
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+                className="input-field"
               />
             </div>
-            <div>
-              <label className="mb-1 block text-sm">Fin</label>
+            <div className="form-field">
+              <label className="form-label">Fin</label>
               <input
                 type="datetime-local"
                 name="end_at"
                 required
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+                className="input-field"
               />
             </div>
-            <div>
-              <label className="mb-1 block text-sm">Puissance (kW)</label>
+            <div className="form-field">
+              <label className="form-label">Puissance (kW)</label>
               <input
                 type="number"
                 name="power_kw"
                 step="0.01"
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
+                className="input-field"
               />
             </div>
-            <div className="sm:col-span-2">
-              <label className="mb-1 block text-sm">Notes</label>
-              <textarea
-                name="notes"
-                rows={2}
-                className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-600 dark:bg-zinc-900"
-              />
+            <div className="form-field sm:col-span-2">
+              <label className="form-label">Notes</label>
+              <textarea name="notes" rows={2} className="input-field" />
             </div>
             <div className="sm:col-span-2">
-              <button
-                type="submit"
-                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-700"
-              >
+              <button type="submit" className="btn-primary">
                 Enregistrer
               </button>
             </div>
@@ -150,30 +139,37 @@ export default async function FlexPage() {
       )}
 
       <section>
-        <h2 className="text-lg font-medium">Créneaux</h2>
+        <h2 className="text-lg font-medium text-primary">Créneaux</h2>
         {slots.length === 0 ? (
-          <p className="mt-2 text-sm text-zinc-500">Aucun créneau.</p>
+          <EmptyState
+            module="flex"
+            title="Aucun créneau flex"
+            description={
+              isAdmin
+                ? "Utilisez le formulaire ci-dessus pour créer votre premier créneau offre ou besoin."
+                : "Aucun créneau n’a encore été enregistré pour cette organisation."
+            }
+          />
         ) : (
-          <ul className="mt-3 space-y-3">
+          <ul className="card-grid mt-3">
             {slots.map((s) => (
               <li
                 key={s.id}
-                className="flex flex-wrap items-start justify-between gap-4 rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-900/50"
+                className="section-card section-card-hover flex flex-wrap items-start justify-between gap-4"
               >
-                <div className="text-sm">
-                  <p className="font-medium capitalize">
-                    {s.kind} · {s.status}
-                  </p>
-                  <p className="text-zinc-600 dark:text-zinc-400">
+                <div className="card-body">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <FlexKindBadge kind={s.kind} />
+                    <FlexStatusBadge status={s.status} />
+                  </div>
+                  <p className="mt-2">
                     {new Date(s.start_at).toLocaleString("fr-FR")} →{" "}
                     {new Date(s.end_at).toLocaleString("fr-FR")}
                   </p>
                   {s.power_kw != null && (
-                    <p className="text-zinc-500">{s.power_kw} kW</p>
+                    <p className="mt-1 card-body-strong">{s.power_kw} kW</p>
                   )}
-                  {s.notes && (
-                    <p className="mt-1 text-zinc-600">{s.notes}</p>
-                  )}
+                  {s.notes && <p className="mt-2">{s.notes}</p>}
                   <AuditMeta
                     created_at={s.created_at}
                     updated_at={s.updated_at ?? s.created_at}
@@ -186,6 +182,7 @@ export default async function FlexPage() {
                     <button
                       type="submit"
                       className="text-sm text-red-600 hover:underline dark:text-red-400"
+                      aria-label={`Supprimer le créneau ${s.kind} ${s.status}`}
                     >
                       Supprimer
                     </button>

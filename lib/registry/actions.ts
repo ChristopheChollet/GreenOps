@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { getSessionOrgId } from "@/lib/auth/org";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function createRecCertificate(formData: FormData) {
   await requireAdmin();
@@ -19,7 +20,11 @@ export async function createRecCertificate(formData: FormData) {
   const notes = formData.get("notes");
 
   if (!label || !periodStart || !periodEnd) {
-    throw new Error("Libellé et période requis");
+    redirect("/registry?error=rec-save");
+  }
+
+  if (periodEnd < periodStart) {
+    redirect("/registry?error=rec-period-order");
   }
 
   const supabase = await createClient();
@@ -34,9 +39,15 @@ export async function createRecCertificate(formData: FormData) {
     notes: notes ? String(notes) : null,
   });
 
-  if (error) throw new Error(error.message);
+  if (error) {
+    if (error.message.includes("rec_period_order")) {
+      redirect("/registry?error=rec-period-order");
+    }
+    redirect("/registry?error=rec-save");
+  }
   revalidatePath("/registry");
   revalidatePath("/dashboard");
+  redirect("/registry?toast=rec-created");
 }
 
 export async function deleteRecCertificate(id: string) {
@@ -54,4 +65,5 @@ export async function deleteRecCertificate(id: string) {
   if (error) throw new Error(error.message);
   revalidatePath("/registry");
   revalidatePath("/dashboard");
+  redirect("/registry?toast=rec-deleted");
 }

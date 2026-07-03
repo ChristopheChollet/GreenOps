@@ -19,7 +19,7 @@ export function AuditMeta({
   const wasEdited = updated - created > 2000;
 
   return (
-    <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+    <p className="mt-2 text-xs text-muted">
       Créé {new Date(created_at).toLocaleString("fr-FR")}
       {shortId(created_by) && (
         <span className="tabular-nums"> · id {shortId(created_by)}</span>
