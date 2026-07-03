@@ -5,9 +5,13 @@ import { useEffect, useState } from "react";
 
 const MESSAGES: Record<string, string> = {
   "flex-created": "Créneau flex enregistré.",
+  "flex-updated": "Créneau flex mis à jour.",
   "flex-deleted": "Créneau supprimé.",
   "rec-created": "Fiche REC enregistrée.",
+  "rec-updated": "Fiche REC mise à jour.",
   "rec-deleted": "Fiche REC supprimée.",
+  "invite-created": "Invitation enregistrée.",
+  "invite-cancelled": "Invitation annulée.",
 };
 
 export function ToastFromQuery() {

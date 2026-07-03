@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import {
   createRecCertificate,
   deleteRecCertificate,
+  updateRecCertificate,
 } from "@/lib/registry/actions";
 import { FormErrorFromQuery } from "@/components/FormErrorFromQuery";
 import { exportRecCertificatesCsv } from "@/lib/export/actions";
@@ -187,15 +188,96 @@ export default async function RegistryPage() {
                   />
                 </div>
                 {isAdmin && (
-                  <form action={deleteRecCertificate.bind(null, c.id)}>
-                    <button
-                      type="submit"
-                      className="text-sm text-red-600 hover:underline dark:text-red-400"
-                      aria-label={`Supprimer la fiche ${c.label}`}
-                    >
-                      Supprimer
-                    </button>
-                  </form>
+                  <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:items-end">
+                    <details className="edit-details">
+                      <summary className="edit-details-summary">Modifier</summary>
+                      <form
+                        action={updateRecCertificate.bind(null, c.id)}
+                        className="edit-details-form grid gap-3 sm:grid-cols-2"
+                      >
+                        <div className="form-field sm:col-span-2">
+                          <label className="form-label">Libellé</label>
+                          <input
+                            name="label"
+                            required
+                            defaultValue={c.label}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">Période début</label>
+                          <input
+                            type="date"
+                            name="period_start"
+                            required
+                            defaultValue={c.period_start}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">Période fin</label>
+                          <input
+                            type="date"
+                            name="period_end"
+                            required
+                            defaultValue={c.period_end}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">Source / producteur</label>
+                          <input
+                            name="source"
+                            defaultValue={c.source ?? ""}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">Quantité (MWh)</label>
+                          <input
+                            type="number"
+                            name="quantity_mwh"
+                            step="0.001"
+                            defaultValue={c.quantity_mwh ?? undefined}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="form-field sm:col-span-2">
+                          <label className="form-label">URL document (PDF)</label>
+                          <input
+                            type="url"
+                            name="document_url"
+                            placeholder="https://…"
+                            defaultValue={c.document_url ?? ""}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="form-field sm:col-span-2">
+                          <label className="form-label">Notes</label>
+                          <textarea
+                            name="notes"
+                            rows={2}
+                            defaultValue={c.notes ?? ""}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <button type="submit" className="btn-primary">
+                            Mettre à jour
+                          </button>
+                        </div>
+                      </form>
+                    </details>
+                    <form action={deleteRecCertificate.bind(null, c.id)}>
+                      <button
+                        type="submit"
+                        className="text-sm text-red-600 hover:underline dark:text-red-400"
+                        aria-label={`Supprimer la fiche ${c.label}`}
+                      >
+                        Supprimer
+                      </button>
+                    </form>
+                  </div>
                 )}
               </li>
             ))}

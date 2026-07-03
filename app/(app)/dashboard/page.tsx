@@ -9,6 +9,8 @@ import { ActivityModuleBadge } from "@/components/StatusBadge";
 import { ChartsPanel } from "./charts-panel";
 import { buildFlexStatusChartData, buildRecSourceChartData } from "@/lib/charts/buildChartData";
 import type { FlexSlotInput, RecCertificateInput } from "@/lib/ops/types";
+import { exportDashboardPdf } from "@/lib/export/actions";
+import { PdfDownloadButton } from "@/components/PdfDownloadButton";
 
 export default async function DashboardPage() {
   const session = await getSessionOrg();
@@ -118,6 +120,13 @@ export default async function DashboardPage() {
         eyebrow="Pilotage"
         title="Tableau de bord"
         description="Pilotage flexibilité et attestations REC (démo Web2, non réglementaire)."
+        actions={
+          <PdfDownloadButton
+            label="Exporter PDF"
+            filename="greenops-rapport-ops.pdf"
+            exportFn={exportDashboardPdf}
+          />
+        }
       />
 
       {session?.role === "viewer" && <ReadOnlyBanner />}

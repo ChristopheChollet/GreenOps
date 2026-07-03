@@ -3,6 +3,8 @@
 import { createClient } from "@/lib/supabase/server";
 import { getSessionOrg } from "@/lib/auth/org";
 import { rowsToCsv } from "@/lib/csv";
+import { buildDashboardPdf } from "@/lib/export/buildDashboardPdf";
+import type { DashboardReportData } from "@/lib/export/dashboardReport";
 
 const FLEX_COLS = [
   { key: "id", header: "id" },
@@ -61,4 +63,71 @@ export async function exportRecCertificatesCsv(): Promise<string> {
 
   if (error) throw new Error(error.message);
   return rowsToCsv((data ?? []) as Record<string, unknown>[], [...REC_COLS]);
+}
+
+async function fetchDashboardReportData(orgId: string): Promise<DashboardReportData> {
+  const supabase = await createClient();
+
+  const [
+    { data: org },
+    { count: flexTotal },
+    { count: flexOpen },
+    { count: recTotal },
+    { data: flexRows },
+    { data: recRows },
+  ] = await Promise.all([
+    supabase.from("organizations").select("name").eq("id", orgId).single(),
+    supabase
+      .from("flex_slots")
+      .select("*", { count: "exact", head: true })
+      .eq("org_id", orgId),
+    supabase
+      .from("flex_slots")
+      .select("*", { count: "exact", head: true })
+      .eq("org_id", orgId)
+      .eq("status", "open"),
+    supabase
+      .from("rec_certificates")
+      .select("*", { count: "exact", head: true })
+      .eq("org_id", orgId),
+    supabase
+      .from("flex_slots")
+      .select("kind, status, start_at, end_at, power_kw")
+      .eq("org_id", orgId)
+      .order("start_at", { ascending: false })
+      .limit(50),
+    supabase
+      .from("rec_certificates")
+      .select("label, period_start, period_end, source, quantity_mwh")
+      .eq("org_id", orgId)
+      .order("created_at", { ascending: false })
+      .limit(50),
+  ]);
+
+  const recList = recRows ?? [];
+  const totalMwh = recList.reduce(
+    (sum, r) => sum + (Number(r.quantity_mwh) || 0),
+    0,
+  );
+
+  return {
+    orgName: (org?.name as string | undefined) ?? "Organisation",
+    generatedAt: new Date(),
+    flexTotal: flexTotal ?? 0,
+    flexOpen: flexOpen ?? 0,
+    recTotal: recTotal ?? 0,
+    totalMwh,
+    flexRows: flexRows ?? [],
+    recRows: recList,
+  };
+}
+
+/** Base64-encoded PDF bytes for client download. */
+export async function exportDashboardPdf(): Promise<string> {
+  const session = await getSessionOrg();
+  if (!session) throw new Error("Non authentifié");
+
+  const data = await fetchDashboardReportData(session.orgId);
+  const bytes = await buildDashboardPdf(data);
+  return Buffer.from(bytes).toString("base64");
 }

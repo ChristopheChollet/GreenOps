@@ -456,6 +456,41 @@ body {
   gap: 0.75rem;
 }
 
+.edit-details {
+  width: 100%;
+  min-width: min(100%, 20rem);
+}
+
+.edit-details-summary {
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(4 120 87);
+  list-style: none;
+}
+
+.edit-details-summary::-webkit-details-marker {
+  display: none;
+}
+
+.edit-details-summary::before {
+  content: "▸ ";
+}
+
+.edit-details[open] .edit-details-summary::before {
+  content: "▾ ";
+}
+
+.dark .edit-details-summary {
+  color: rgb(110 231 183);
+}
+
+.edit-details-form {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--surface-border);
+}
+
 @media (min-width: 768px) {
   .card-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));

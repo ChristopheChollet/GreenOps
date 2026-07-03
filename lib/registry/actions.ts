@@ -5,6 +5,7 @@ import { getSessionOrgId } from "@/lib/auth/org";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { recPeriodErrorKey } from "@/lib/registry/validate";
 
 export async function createRecCertificate(formData: FormData) {
   await requireAdmin();
@@ -23,8 +24,9 @@ export async function createRecCertificate(formData: FormData) {
     redirect("/registry?error=rec-save");
   }
 
-  if (periodEnd < periodStart) {
-    redirect("/registry?error=rec-period-order");
+  const periodError = recPeriodErrorKey(periodStart, periodEnd);
+  if (periodError) {
+    redirect(`/registry?error=${periodError}`);
   }
 
   const supabase = await createClient();
@@ -48,6 +50,54 @@ export async function createRecCertificate(formData: FormData) {
   revalidatePath("/registry");
   revalidatePath("/dashboard");
   redirect("/registry?toast=rec-created");
+}
+
+export async function updateRecCertificate(id: string, formData: FormData) {
+  await requireAdmin();
+  const orgId = await getSessionOrgId();
+  if (!orgId) throw new Error("Non authentifié");
+
+  const label = String(formData.get("label") ?? "").trim();
+  const periodStart = String(formData.get("period_start"));
+  const periodEnd = String(formData.get("period_end"));
+  const source = formData.get("source");
+  const quantityMwh = formData.get("quantity_mwh");
+  const documentUrl = formData.get("document_url");
+  const notes = formData.get("notes");
+
+  if (!label || !periodStart || !periodEnd) {
+    redirect("/registry?error=rec-save");
+  }
+
+  const periodError = recPeriodErrorKey(periodStart, periodEnd);
+  if (periodError) {
+    redirect(`/registry?error=${periodError}`);
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("rec_certificates")
+    .update({
+      label,
+      period_start: periodStart,
+      period_end: periodEnd,
+      source: source ? String(source) : null,
+      quantity_mwh: quantityMwh ? Number(quantityMwh) : null,
+      document_url: documentUrl ? String(documentUrl) : null,
+      notes: notes ? String(notes) : null,
+    })
+    .eq("id", id)
+    .eq("org_id", orgId);
+
+  if (error) {
+    if (error.message.includes("rec_period_order")) {
+      redirect("/registry?error=rec-period-order");
+    }
+    redirect("/registry?error=rec-save");
+  }
+  revalidatePath("/registry");
+  revalidatePath("/dashboard");
+  redirect("/registry?toast=rec-updated");
 }
 
 export async function deleteRecCertificate(id: string) {

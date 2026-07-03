@@ -9,6 +9,7 @@ const links: { href: string; label: string; module: ModuleKey }[] = [
   { href: "/dashboard", label: "Tableau de bord", module: "dashboard" },
   { href: "/flex", label: "Flexibilité", module: "flex" },
   { href: "/registry", label: "Registre REC", module: "registry" },
+  { href: "/team", label: "Équipe", module: "dashboard" },
 ];
 
 export function NavLinks() {

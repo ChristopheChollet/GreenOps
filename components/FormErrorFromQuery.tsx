@@ -13,12 +13,17 @@ const MESSAGES: Record<string, string> = {
   "rec-save": "Impossible d’enregistrer la fiche REC. Réessayez.",
 };
 
-export function FormErrorFromQuery() {
+export function FormErrorFromQuery({
+  customMessages,
+}: {
+  customMessages?: Record<string, string>;
+}) {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
   const errorKey = searchParams.get("error");
-  const message = errorKey ? MESSAGES[errorKey] : null;
+  const messages = { ...MESSAGES, ...customMessages };
+  const message = errorKey ? messages[errorKey] : null;
 
   useEffect(() => {
     if (!message) return;

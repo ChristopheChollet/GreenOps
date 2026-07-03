@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { getSessionOrg } from "@/lib/auth/org";
 import { Suspense } from "react";
-import { createFlexSlot, deleteFlexSlot } from "@/lib/flex/actions";
+import { createFlexSlot, deleteFlexSlot, updateFlexSlot } from "@/lib/flex/actions";
 import { FormErrorFromQuery } from "@/components/FormErrorFromQuery";
 import { exportFlexSlotsCsv } from "@/lib/export/actions";
 import { CsvDownloadButton } from "@/components/CsvDownloadButton";
@@ -10,6 +10,7 @@ import { ReadOnlyBanner } from "@/components/ReadOnlyBanner";
 import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
 import { FlexKindBadge, FlexStatusBadge } from "@/components/StatusBadge";
+import { toDatetimeLocalValue } from "@/lib/datetime";
 
 type FlexSlot = {
   id: string;
@@ -178,15 +179,92 @@ export default async function FlexPage() {
                   />
                 </div>
                 {isAdmin && (
-                  <form action={deleteFlexSlot.bind(null, s.id)}>
-                    <button
-                      type="submit"
-                      className="text-sm text-red-600 hover:underline dark:text-red-400"
-                      aria-label={`Supprimer le créneau ${s.kind} ${s.status}`}
-                    >
-                      Supprimer
-                    </button>
-                  </form>
+                  <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:items-end">
+                    <details className="edit-details">
+                      <summary className="edit-details-summary">Modifier</summary>
+                      <form
+                        action={updateFlexSlot.bind(null, s.id)}
+                        className="edit-details-form grid gap-3 sm:grid-cols-2"
+                      >
+                        <div className="form-field">
+                          <label className="form-label">Type</label>
+                          <select
+                            name="kind"
+                            defaultValue={s.kind}
+                            className="input-field"
+                          >
+                            <option value="offer">Offre</option>
+                            <option value="need">Besoin</option>
+                          </select>
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">Statut</label>
+                          <select
+                            name="status"
+                            defaultValue={s.status}
+                            className="input-field"
+                          >
+                            <option value="draft">Brouillon</option>
+                            <option value="open">Ouvert</option>
+                            <option value="matched">Matché</option>
+                          </select>
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">Début</label>
+                          <input
+                            type="datetime-local"
+                            name="start_at"
+                            required
+                            defaultValue={toDatetimeLocalValue(s.start_at)}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">Fin</label>
+                          <input
+                            type="datetime-local"
+                            name="end_at"
+                            required
+                            defaultValue={toDatetimeLocalValue(s.end_at)}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label className="form-label">Puissance (kW)</label>
+                          <input
+                            type="number"
+                            name="power_kw"
+                            step="0.01"
+                            defaultValue={s.power_kw ?? undefined}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="form-field sm:col-span-2">
+                          <label className="form-label">Notes</label>
+                          <textarea
+                            name="notes"
+                            rows={2}
+                            defaultValue={s.notes ?? ""}
+                            className="input-field"
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <button type="submit" className="btn-primary">
+                            Mettre à jour
+                          </button>
+                        </div>
+                      </form>
+                    </details>
+                    <form action={deleteFlexSlot.bind(null, s.id)}>
+                      <button
+                        type="submit"
+                        className="text-sm text-red-600 hover:underline dark:text-red-400"
+                        aria-label={`Supprimer le créneau ${s.kind} ${s.status}`}
+                      >
+                        Supprimer
+                      </button>
+                    </form>
+                  </div>
                 )}
               </li>
             ))}

@@ -34,6 +34,9 @@ Référence métier longue (checklist notions énergie / climat / Web3) : voir l
    — pistes d’audit (`created_by`, `updated_at`, …), export CSV côté données, rôles **admin** / **viewer** (lecture seule en RLS).  
    Si un trigger refuse `execute function`, essayez `execute procedure` comme pour la migration 001.
 
+2c. (V2) Exécuter [`supabase/migrations/003_org_invitations.sql`](./supabase/migrations/003_org_invitations.sql)  
+   — invitations par e-mail, page **Équipe**, plusieurs membres par organisation.
+
 3. **Authentication → URL Configuration** : ajouter en redirect URLs :
 
    - `http://localhost:3000/auth/callback`
@@ -63,19 +66,20 @@ Ouvrir [http://localhost:3000](http://localhost:3000), **Connexion**, recevoir l
 ## Parcours démo (~2 min)
 
 1. Connexion magic link.  
-2. **Flexibilité** : créer un créneau (offre / besoin, statut), voir la piste d’audit sous la carte, **Exporter CSV** si au moins une ligne.  
-3. **Registre REC** : créer une fiche, audit, export CSV.  
-4. **Tableau de bord** : KPI, graphiques et activité récente.  
-5. (Optionnel) Rôle **viewer** : dans le SQL Editor,  
+2. **Flexibilité** : créer un créneau (offre / besoin, statut), **modifier** ou supprimer une fiche, voir la piste d’audit, **Exporter CSV** si au moins une ligne.  
+3. **Registre REC** : créer une fiche, **modifier** ou supprimer, audit, export CSV.  
+4. **Tableau de bord** : KPI, graphiques, **export PDF** (rapport ops) et activité récente.  
+5. **Équipe** (admin) : inviter une adresse e-mail → la personne rejoint l’org à la première connexion.  
+6. (Optionnel) Rôle **viewer** : via invitation ou  
    `update public.profiles set role = 'viewer' where user_id = '…';`  
-   (uuid depuis **Authentication → Users**) — l’UI passe en lecture seule ; remettre `'admin'` pour éditer à nouveau.
+   — l’UI passe en lecture seule.
 
 ## Roadmap (hors MVP)
 
-- Trésorerie / enveloppes (miroir « Vault » Web2)
-- Votes / propositions (miroir gouvernance)
-- Export PDF léger (le CSV est déjà disponible sur Flexibilité et Registre REC)
-- Multi-utilisateurs par organisation (invitations) — actuellement 1 organisation par utilisateur à l'inscription
+- ~~Multi-utilisateurs par organisation (invitations)~~ — **V2** (page Équipe + migration 003)
+- ~~Export PDF léger~~ — **V2** (rapport ops depuis le tableau de bord)
+- Trésorerie / enveloppes (miroir « Vault » Web2) — V3+ optionnel
+- Votes / propositions (miroir gouvernance) — V3+ optionnel
 - Option **Prisma** sur la même base pour le CV
 
 ## Famille de produits
