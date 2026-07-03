@@ -9,14 +9,14 @@ const links: { href: string; label: string; module: ModuleKey }[] = [
   { href: "/dashboard", label: "Tableau de bord", module: "dashboard" },
   { href: "/flex", label: "Flexibilité", module: "flex" },
   { href: "/registry", label: "Registre REC", module: "registry" },
-  { href: "/team", label: "Équipe", module: "dashboard" },
+  { href: "/team", label: "Équipe", module: "team" },
 ];
 
 export function NavLinks() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-wrap gap-1 text-sm" aria-label="Navigation principale">
+    <nav className="flex flex-wrap items-center gap-1" aria-label="Navigation principale">
       {links.map((l) => {
         const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
         const color = moduleTheme[l.module].color;

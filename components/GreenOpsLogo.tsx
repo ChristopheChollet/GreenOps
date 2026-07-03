@@ -42,7 +42,7 @@ export function BrandLockup({ href = "/dashboard" }: { href?: string }) {
       <GreenOpsLogo size="md" />
       <span className="brand-lockup-text">
         <span className="brand-lockup-name">GreenOps</span>
-        <span className="brand-lockup-sub">Console</span>
+        <span className="brand-lockup-sub">Ops énergie</span>
       </span>
     </Link>
   );

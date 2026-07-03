@@ -2,36 +2,58 @@ import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { SiteHeader } from "@/components/SiteHeader";
 import { AppFooter } from "@/components/AppFooter";
-import { ProductShowcase } from "@/components/ProductShowcase";
-import { ScreenshotFrame } from "@/components/ScreenshotFrame";
+import { HeroLivePreview } from "@/components/HeroLivePreview";
 import { ModuleIcon } from "@/components/ModuleIcon";
 import { getRepoUrl } from "@/lib/site";
-import { moduleTheme } from "@/lib/moduleTheme";
+import { moduleTheme, type ModuleKey } from "@/lib/moduleTheme";
 
 export const dynamic = "force-dynamic";
 
-const features = [
+const features: {
+  module: ModuleKey;
+  href: string;
+  title: string;
+  description: string;
+}[] = [
   {
-    module: "flex" as const,
-    title: "Flexibilité réseau",
-    description:
-      "Créneaux offre / besoin, statuts ops, piste d’audit et export CSV — logique d’engagement et d’équilibre offre-demande.",
-  },
-  {
-    module: "registry" as const,
-    title: "Registre REC",
-    description:
-      "Fiches pédagogiques, volumes MWh, documents liés — traçabilité Web2 sans prétendre à un registre national.",
-  },
-  {
-    module: "dashboard" as const,
+    module: "dashboard",
+    href: "/dashboard",
     title: "Tableau de bord",
     description:
-      "KPI, graphiques et activité récente pour suivre flex et REC en un coup d’œil.",
+      "KPI flex/REC, graphiques, activité récente et export PDF — vue consolidée ops.",
+  },
+  {
+    module: "flex",
+    href: "/flex",
+    title: "Flexibilité",
+    description:
+      "Créneaux offre/besoin, édition inline, statuts, audit et export CSV.",
+  },
+  {
+    module: "registry",
+    href: "/registry",
+    title: "Registre REC",
+    description:
+      "Fiches certificats, volumes MWh, édition et piste d'audit — démo non réglementaire.",
+  },
+  {
+    module: "team",
+    href: "/team",
+    title: "Équipe",
+    description:
+      "Invitations par e-mail, rôles admin/viewer et isolation multi-organisation (RLS).",
   },
 ];
 
-const stack = ["Next.js", "TypeScript", "Supabase", "PostgreSQL", "RLS", "Vercel"];
+const stack = [
+  "Next.js",
+  "TypeScript",
+  "Supabase",
+  "PostgreSQL",
+  "RLS",
+  "pdf-lib",
+  "Vercel",
+];
 
 export default async function Home() {
   const supabase = await createClient();
@@ -39,34 +61,30 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
   const repoUrl = getRepoUrl();
+  const ctaHref = user ? "/dashboard" : "/login";
+  const ctaLabel = user ? "Ouvrir l'app" : "Essayer la démo";
 
   return (
     <div className="app-canvas flex min-h-screen flex-col">
-      <SiteHeader
-        ctaHref={user ? "/dashboard" : "/login"}
-        ctaLabel={user ? "Console" : "Connexion"}
-      />
+      <SiteHeader />
 
-      <main id="main-content" className="flex-1">
-        <section className="landing-hero-split mx-auto max-w-5xl px-4 pb-16 pt-12 sm:pb-20 sm:pt-16">
-          <div className="landing-hero-copy motion-fade-up">
+      <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 pb-16 pt-4 sm:pt-6">
+        <section className="landing-hero-split">
+          <div className="landing-hero-copy motion-fade-up min-w-0">
             <p className="landing-eyebrow">Product engineer · Énergie &amp; climat</p>
             <h1 className="landing-title">
-              Console ops pour
+              Pilotage ops
               <br />
               <span className="landing-title-accent">flexibilité &amp; REC</span>
             </h1>
             <p className="landing-lead">
-              GreenOps est une démo SaaS B2B : authentification, PostgreSQL avec RLS, modules
-              métier et pilotage consolidé — le type de produit qu’on retrouve chez les acteurs
-              climate-tech et energy ops.
+              GreenOps est une démo SaaS B2B : authentification Supabase, PostgreSQL
+              avec RLS, modules métier et exports — le pendant produit de GridPulse
+              (data mix &amp; carbone), orienté ops énergie / climat.
             </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                href={user ? "/dashboard" : "/login"}
-                className="btn-primary px-6 py-2.5 text-sm"
-              >
-                {user ? "Ouvrir la console" : "Essayer la démo"}
+            <div className="landing-hero-cta">
+              <Link href={ctaHref} className="btn-primary px-6 py-2.5 text-sm">
+                {ctaLabel}
               </Link>
               <a
                 href={repoUrl}
@@ -77,55 +95,52 @@ export default async function Home() {
                 Code source →
               </a>
             </div>
+            <ul className="stack-pills" aria-label="Stack technique">
+              {stack.map((item) => (
+                <li key={item}>
+                  <span className="stack-pill">{item}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-          <div className="landing-hero-visual motion-fade-up motion-stagger-2">
-            <ScreenshotFrame
-              src="/screenshots/dashboard.webp"
-              alt="Aperçu du tableau de bord GreenOps avec KPI, graphiques flex et REC, et activité récente"
-              priority
-            />
+          <div className="min-w-0">
+            <HeroLivePreview />
           </div>
         </section>
 
-        <section className="mx-auto max-w-5xl px-4 pb-20" aria-labelledby="features-heading">
-          <h2 id="features-heading" className="sr-only">
-            Fonctionnalités principales
+        <section
+          className="landing-modules motion-fade-up motion-stagger-2"
+          aria-labelledby="features-heading"
+        >
+          <p className="text-xs font-medium uppercase tracking-widest text-muted">
+            Modules
+          </p>
+          <h2 id="features-heading" className="mt-2 text-xl font-semibold text-primary">
+            Les quatre pages du produit
           </h2>
-          <div className="feature-grid">
-            {features.map((f, index) => {
+          <p className="landing-modules-lead">
+            Même entrées que la navigation — connexion requise (magic link). Chaque
+            module partage la même organisation et les politiques RLS PostgreSQL.
+          </p>
+          <ul className="feature-grid">
+            {features.map((f) => {
               const theme = moduleTheme[f.module];
               return (
-                <article
-                  key={f.module}
-                  className={`feature-card motion-fade-up motion-stagger-${index + 1}`}
-                >
-                  <div
-                    className="feature-card-icon"
-                    style={{ color: theme.color, backgroundColor: theme.tint }}
-                    aria-hidden
-                  >
-                    <ModuleIcon module={f.module} size={24} />
-                  </div>
-                  <h3 className="feature-card-title">{f.title}</h3>
-                  <p className="feature-card-desc">{f.description}</p>
-                </article>
+                <li key={f.href} className="h-full">
+                  <Link href={f.href} className="feature-card feature-card-link">
+                    <span
+                      className="feature-card-icon"
+                      style={{ color: theme.color, backgroundColor: theme.tint }}
+                      aria-hidden
+                    >
+                      <ModuleIcon module={f.module} size={24} />
+                    </span>
+                    <h3 className="feature-card-title">{f.title}</h3>
+                    <p className="feature-card-desc">{f.description}</p>
+                  </Link>
+                </li>
               );
             })}
-          </div>
-        </section>
-
-        <ProductShowcase />
-
-        <section className="landing-stack mx-auto max-w-5xl px-4 pb-16">
-          <p className="text-center text-xs font-medium uppercase tracking-widest text-muted">
-            Stack technique
-          </p>
-          <ul className="mt-4 flex flex-wrap justify-center gap-2" aria-label="Stack technique">
-            {stack.map((item) => (
-              <li key={item} className="stack-pill">
-                {item}
-              </li>
-            ))}
           </ul>
         </section>
       </main>

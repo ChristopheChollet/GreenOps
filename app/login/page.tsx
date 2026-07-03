@@ -12,12 +12,12 @@ export default async function LoginPage({
 
   return (
     <div className="app-canvas flex min-h-screen flex-col">
-      <SiteHeader ctaHref="/" ctaLabel="Accueil" />
+      <SiteHeader showNav={false} />
       <div className="flex flex-1 flex-col items-center justify-center px-4 py-12" id="main-content">
         <div className="login-card w-full max-w-md space-y-8">
           <div className="text-center">
             <GreenOpsLogo size="lg" showWordmark />
-            <p className="mt-3 text-sm text-muted">Console · Connexion sécurisée</p>
+            <p className="mt-3 text-sm text-muted">Ops énergie · Connexion sécurisée</p>
             <p className="mt-4 text-sm text-secondary">
               Lien magique par email. Configurez Supabase Auth → Email.
             </p>
