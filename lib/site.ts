@@ -10,3 +10,14 @@ export function getDemoUrl(): string | null {
   if (!url || url.includes("localhost")) return null;
   return url;
 }
+
+export function getEcosystemLinks() {
+  return {
+    gridPulse:
+      process.env.NEXT_PUBLIC_GRIDPULSE_DEMO_URL?.trim() ||
+      "https://grid-pulse-steel.vercel.app",
+    flexSlot:
+      process.env.NEXT_PUBLIC_FLEXSLOT_DEMO_URL?.trim() ||
+      "https://flex-slot.vercel.app",
+  };
+}

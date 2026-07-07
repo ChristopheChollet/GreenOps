@@ -4,7 +4,8 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { AppFooter } from "@/components/AppFooter";
 import { HeroLivePreview } from "@/components/HeroLivePreview";
 import { ModuleIcon } from "@/components/ModuleIcon";
-import { getRepoUrl } from "@/lib/site";
+import { OpsChain } from "@/components/OpsChain";
+import { getEcosystemLinks, getRepoUrl } from "@/lib/site";
 import { moduleTheme, type ModuleKey } from "@/lib/moduleTheme";
 
 export const dynamic = "force-dynamic";
@@ -61,6 +62,7 @@ export default async function Home() {
     data: { user },
   } = await supabase.auth.getUser();
   const repoUrl = getRepoUrl();
+  const ecosystem = getEcosystemLinks();
   const ctaHref = user ? "/dashboard" : "/login";
   const ctaLabel = user ? "Ouvrir le tableau de bord" : "Essayer la démo";
 
@@ -108,6 +110,14 @@ export default async function Home() {
               <HeroLivePreview />
             </div>
           </section>
+
+          <OpsChain
+            highlight="action"
+            links={{
+              gridPulse: ecosystem.gridPulse,
+              flexSlot: ecosystem.flexSlot,
+            }}
+          />
 
           <section
           className="landing-modules motion-fade-up motion-stagger-2"
