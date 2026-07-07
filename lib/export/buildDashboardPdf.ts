@@ -70,7 +70,7 @@ export async function buildDashboardPdf(data: DashboardReportData): Promise<Uint
   y -= 4;
   drawLine(`Organisation : ${truncate(data.orgName, 60)}`, { color: muted });
   drawLine(
-    `Genere le ${data.generatedAt.toLocaleString("fr-FR")} — demo portfolio, non reglementaire`,
+    `Genere le ${data.generatedAt.toLocaleString("fr-FR")} — prototype non reglementaire`,
     { size: 9, color: muted },
   );
   y -= 8;

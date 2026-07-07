@@ -11,7 +11,7 @@ export function AppFooter() {
           Pilotage ops énergie &amp; climat
         </p>
         <p className="mt-4 text-xs text-muted">
-          Démo portfolio · {year}
+          Christophe Chollet · {year}
         </p>
       </div>
     </footer>

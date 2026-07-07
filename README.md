@@ -1,6 +1,6 @@
 # GreenOps Console
 
-SaaS Web2 **énergie / climat** : flexibilité (créneaux), fiches **REC** pédagogiques, tableau de bord. Même **vision modulaire** que le flagship Web3 **[GreenChain Common](https://github.com/ChristopheChollet/GreenChain-Common)** (vault / market / registry / gouvernance côté dApp) — ici **sans blockchain**, pour une preuve **full-stack employable** (auth, PostgreSQL, RLS, déploiement).
+SaaS Web2 **énergie / climat** : flexibilité (créneaux), fiches **REC** pédagogiques, tableau de bord. Même **vision modulaire** que le flagship Web3 **[GreenChain Common](https://github.com/ChristopheChollet/GreenChain-Common)** (vault / market / registry / gouvernance côté dApp) — ici **sans blockchain**, console **full-stack** (auth, PostgreSQL, RLS, déploiement).
 
 > Démo **non réglementaire** : les REC et quantités sont des **exemples** de pilotage, pas un registre national.
 
@@ -87,5 +87,5 @@ Ouvrir [http://localhost:3000](http://localhost:3000), **Connexion**, recevoir l
 
 ## Famille de produits
 
-- **GreenChain Common** (Web3) : dApp Hardhat + wallet — dépôt séparé `GreenChainCommon` (même « famille » produit / portfolio).
+- **GreenChain Common** (Web3) : dApp Hardhat + wallet — dépôt séparé `GreenChainCommon` (même famille produit).
 - **GreenOps** (Web2) : ce dépôt — console SaaS B2B de démonstration.
