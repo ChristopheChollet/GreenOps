@@ -81,8 +81,13 @@ Ouvrir [http://localhost:3000](http://localhost:3000), **Connexion**, recevoir l
 
 - ~~Multi-utilisateurs par organisation (invitations)~~ — **V2** (page Équipe + migration 003)
 - ~~Export PDF léger~~ — **V2** (rapport ops depuis le tableau de bord)
-- Trésorerie / enveloppes (miroir « Vault » Web2) — V3+ optionnel
-- Votes / propositions (miroir gouvernance) — V3+ optionnel
+
+### V3 (optionnel — plus tard)
+
+> Détail consolidé écosystème : [portfolio `docs/V3-ROADMAP.md`](https://github.com/ChristopheChollet/portfolio-starter-kit/blob/main/docs/V3-ROADMAP.md).
+
+- Trésorerie / enveloppes (miroir « Vault » Web2)
+- Votes / propositions (miroir gouvernance)
 - Option **Prisma** sur la même base pour le CV
 
 ## Famille de produits
