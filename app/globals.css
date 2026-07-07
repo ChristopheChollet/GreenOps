@@ -813,7 +813,11 @@ body {
 }
 
 .landing-title-accent {
-  color: var(--accent-emerald);
+  color: #059669;
+}
+
+h1.landing-title .landing-title-accent {
+  color: #059669;
 }
 
 .landing-lead {
