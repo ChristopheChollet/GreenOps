@@ -11,6 +11,12 @@ import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
 import { FlexKindBadge, FlexStatusBadge } from "@/components/StatusBadge";
 import { toDatetimeLocalValue } from "@/lib/datetime";
+import {
+  flexSlotActionLabel,
+  isFlexSlotOrigin,
+} from "@/lib/flex/flexslot-origin";
+
+export const dynamic = "force-dynamic";
 
 type FlexSlot = {
   id: string;
@@ -20,6 +26,9 @@ type FlexSlot = {
   end_at: string;
   power_kw: number | null;
   notes: string | null;
+  source?: string | null;
+  recommendation_action?: string | null;
+  gridpulse_score?: number | null;
   created_at: string;
   updated_at?: string;
   created_by?: string | null;
@@ -36,11 +45,17 @@ export default async function FlexPage() {
     return <p className="text-zinc-600">Organisation introuvable.</p>;
   }
 
-  const { data: rows } = await supabase
+  const { data: rows, error } = await supabase
     .from("flex_slots")
-    .select("*")
+    .select(
+      "id, kind, status, start_at, end_at, power_kw, notes, source, recommendation_action, gridpulse_score, created_at, updated_at, created_by, updated_by",
+    )
     .eq("org_id", orgId)
     .order("start_at", { ascending: false });
+
+  if (error) {
+    console.error("[flex] load slots:", error.message);
+  }
 
   const slots = (rows ?? []) as FlexSlot[];
   const openCount = slots.filter((s) => s.status === "open").length;
@@ -76,9 +91,22 @@ export default async function FlexPage() {
           <Suspense fallback={null}>
             <FormErrorFromQuery />
           </Suspense>
-          <h2 className="text-lg font-medium text-primary">Nouveau créneau</h2>
+          <h2 className="text-lg font-medium text-primary">Nouveau créneau (manuel)</h2>
           <p className="mt-1 text-xs text-muted">
             La fin doit être strictement après le début (ex. début 14:00 → fin 16:00).
+          </p>
+          <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
+            Pour un créneau avec badge <strong>FlexSlot · Consommer</strong>, utilisez{" "}
+            <a
+              href="http://localhost:3002/recommendations"
+              className="font-medium underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              FlexSlot → Créer le slot dans GreenOps
+            </a>
+            . Ce formulaire crée un slot <code className="text-[11px]">source = manual</code> sans
+            traçabilité GridPulse.
           </p>
           <form
             action={createFlexSlot}
@@ -156,12 +184,21 @@ export default async function FlexPage() {
             {slots.map((s) => (
               <li
                 key={s.id}
-                className="section-card section-card-hover flex flex-wrap items-start justify-between gap-4"
+                id={`slot-${s.id}`}
+                className="section-card section-card-hover flex scroll-mt-24 flex-wrap items-start justify-between gap-4 target:ring-2 target:ring-orange-400"
               >
                 <div className="card-body">
                   <div className="flex flex-wrap items-center gap-2">
                     <FlexKindBadge kind={s.kind} />
                     <FlexStatusBadge status={s.status} />
+                    {isFlexSlotOrigin(s) && (
+                      <span className="rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-800 dark:bg-orange-950 dark:text-orange-200">
+                        FlexSlot
+                        {flexSlotActionLabel(s.recommendation_action)
+                          ? ` · ${flexSlotActionLabel(s.recommendation_action)}`
+                          : ""}
+                      </span>
+                    )}
                   </div>
                   <p className="mt-2">
                     {new Date(s.start_at).toLocaleString("fr-FR")} →{" "}

@@ -37,6 +37,9 @@ Référence métier longue (checklist notions énergie / climat / Web3) : voir l
 2c. (V2) Exécuter [`supabase/migrations/003_org_invitations.sql`](./supabase/migrations/003_org_invitations.sql)  
    — invitations par e-mail, page **Équipe**, plusieurs membres par organisation.
 
+2d. (FlexSlot) Exécuter [`supabase/migrations/004_flexslot_integration.sql`](./supabase/migrations/004_flexslot_integration.sql)  
+   — traçabilité GridPulse → GreenOps (`source`, score, fenêtre carbone).
+
 3. **Authentication → URL Configuration** : ajouter en redirect URLs :
 
    - `http://localhost:3000/auth/callback`

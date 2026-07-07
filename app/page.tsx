@@ -65,7 +65,7 @@ export default async function Home() {
   const ctaLabel = user ? "Ouvrir le tableau de bord" : "Essayer la démo";
 
   return (
-    <div className="app-canvas flex min-h-screen flex-col">
+    <>
       <SiteHeader />
 
       <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
@@ -148,6 +148,6 @@ export default async function Home() {
       </main>
 
       <AppFooter />
-    </div>
+    </>
   );
 }

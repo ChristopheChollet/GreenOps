@@ -20,7 +20,7 @@ export default async function AppLayout({
   }
 
   return (
-    <div className="app-canvas flex min-h-screen flex-col">
+    <>
       <Suspense fallback={null}>
         <ToastFromQuery />
       </Suspense>
@@ -29,6 +29,6 @@ export default async function AppLayout({
         {children}
       </main>
       <AppFooter />
-    </div>
+    </>
   );
 }

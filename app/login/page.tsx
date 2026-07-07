@@ -11,7 +11,7 @@ export default async function LoginPage({
   const { error: qpError } = await searchParams;
 
   return (
-    <div className="app-canvas flex min-h-screen flex-col">
+    <>
       <SiteHeader showNav={false} />
       <div className="flex flex-1 flex-col items-center justify-center px-4 py-12" id="main-content">
         <div className="login-card w-full max-w-md space-y-8">
@@ -36,6 +36,6 @@ export default async function LoginPage({
           </p>
         </div>
       </div>
-    </div>
+    </>
   );
 }

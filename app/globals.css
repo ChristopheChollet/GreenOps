@@ -767,8 +767,13 @@ body {
   z-index: 40;
   border-bottom: 1px solid var(--surface-border);
   background: color-mix(in srgb, var(--surface) 92%, transparent);
-  backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .site-header {
+    backdrop-filter: blur(8px);
+  }
 }
 
 .site-header-bar {
@@ -1043,11 +1048,9 @@ body {
 @keyframes app-fade-in {
   from {
     opacity: 0;
-    transform: translateY(4px);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
   }
 }
 

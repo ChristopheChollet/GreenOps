@@ -3,6 +3,7 @@ import { NavLinks } from "@/components/NavLinks";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { BrandLockup } from "@/components/GreenOpsLogo";
 import { getSessionOrg } from "@/lib/auth/org";
+import { glassHeaderStyle } from "@/lib/glassHeaderStyle";
 
 export async function AppNav() {
   const session = await getSessionOrg();
@@ -10,7 +11,7 @@ export async function AppNav() {
     session?.role === "viewer" ? "Lecture seule" : "Administrateur";
 
   return (
-    <header className="app-nav site-header" role="banner">
+    <header className="app-nav site-header" style={glassHeaderStyle} role="banner">
       <div className="app-nav-bar site-header-bar mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-4 gap-y-2 px-4">
         <BrandLockup href="/" />
         <div className="app-nav-scroll min-w-0">
