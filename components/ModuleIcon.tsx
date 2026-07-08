@@ -34,6 +34,13 @@ const paths: Record<ModuleKey, React.ReactNode> = {
       <path d="M16 3.13a4 4 0 0 1 0 7.75" />
     </>
   ),
+  billing: (
+    <>
+      <rect x="2" y="5" width="20" height="14" rx="2" />
+      <path d="M2 10h20" />
+      <path d="M6 15h4" />
+    </>
+  ),
 };
 
 export function ModuleIcon({

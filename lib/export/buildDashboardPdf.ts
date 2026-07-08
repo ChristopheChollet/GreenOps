@@ -73,6 +73,9 @@ export async function buildDashboardPdf(data: DashboardReportData): Promise<Uint
     `Genere le ${data.generatedAt.toLocaleString("fr-FR")} — prototype non reglementaire`,
     { size: 9, color: muted },
   );
+  if (data.planNote) {
+    drawLine(data.planNote, { size: 9, color: muted });
+  }
   y -= 8;
 
   drawLine("Indicateurs", { bold: true, size: 12 });

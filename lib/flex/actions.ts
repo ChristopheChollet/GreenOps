@@ -6,6 +6,7 @@ import { requireAdmin } from "@/lib/auth/require-admin";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { flexSlotTimeErrorKey } from "@/lib/flex/validate";
+import { recordUsage } from "@/lib/billing/client";
 
 export async function createFlexSlot(formData: FormData) {
   await requireAdmin();
@@ -29,15 +30,19 @@ export async function createFlexSlot(formData: FormData) {
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.from("flex_slots").insert({
-    org_id: orgId,
-    kind: kind === "need" ? "need" : "offer",
-    status: ["draft", "open", "matched"].includes(status) ? status : "draft",
-    start_at: new Date(startAt).toISOString(),
-    end_at: new Date(endAt).toISOString(),
-    power_kw: powerKw ? Number(powerKw) : null,
-    notes: notes ? String(notes) : null,
-  });
+  const { data, error } = await supabase
+    .from("flex_slots")
+    .insert({
+      org_id: orgId,
+      kind: kind === "need" ? "need" : "offer",
+      status: ["draft", "open", "matched"].includes(status) ? status : "draft",
+      start_at: new Date(startAt).toISOString(),
+      end_at: new Date(endAt).toISOString(),
+      power_kw: powerKw ? Number(powerKw) : null,
+      notes: notes ? String(notes) : null,
+    })
+    .select("id")
+    .single();
 
   if (error) {
     if (error.message.includes("flex_time_order")) {
@@ -45,6 +50,10 @@ export async function createFlexSlot(formData: FormData) {
     }
     redirect("/flex?error=flex-save");
   }
+
+  // Best-effort: VoltFlow decides internally whether the org is billable (Pro plan).
+  if (data?.id) await recordUsage(orgId, data.id);
+
   revalidatePath("/flex");
   revalidatePath("/dashboard");
   redirect("/flex?toast=flex-created");

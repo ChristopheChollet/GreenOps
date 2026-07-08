@@ -28,6 +28,12 @@ export function FlexKindBadge({ kind }: { kind: string }) {
   return <span className={className}>{labels[kind] ?? kind}</span>;
 }
 
+export function PlanBadge({ plan }: { plan: "free" | "pro" }) {
+  const className =
+    plan === "pro" ? "status-badge status-badge-ok" : "status-badge status-badge-neutral";
+  return <span className={className}>{plan === "pro" ? "Pro" : "Free"}</span>;
+}
+
 export function ActivityModuleBadge({ module }: { module: "flex" | "rec" }) {
   return (
     <span

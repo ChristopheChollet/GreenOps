@@ -1,6 +1,8 @@
 export type DashboardReportData = {
   orgName: string;
   generatedAt: Date;
+  /** Shown under the header when the export is truncated (Free plan). */
+  planNote?: string;
   flexTotal: number;
   flexOpen: number;
   recTotal: number;

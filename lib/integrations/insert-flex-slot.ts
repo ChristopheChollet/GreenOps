@@ -4,6 +4,7 @@ import {
   buildGreenOpsFlexUrl,
   type FlexSlotIntegrationInput,
 } from "@/lib/integrations/flex-slot";
+import { recordUsage } from "@/lib/billing/client";
 
 export async function insertFlexSlotFromIntegration(
   input: FlexSlotIntegrationInput,
@@ -64,6 +65,9 @@ export async function insertFlexSlotFromIntegration(
       500,
     );
   }
+
+  // Best-effort: VoltFlow decides internally whether the org is billable (Pro plan).
+  await recordUsage(input.org_id, data.id);
 
   return {
     id: data.id,

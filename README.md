@@ -86,8 +86,8 @@ Ouvrir [http://localhost:3000](http://localhost:3000), **Connexion**, recevoir l
 
 > Détail consolidé écosystème : [portfolio `docs/V3-ROADMAP.md`](https://github.com/ChristopheChollet/portfolio-starter-kit/blob/main/docs/V3-ROADMAP.md).
 
-- Trésorerie / enveloppes (miroir « Vault » Web2)
-- Votes / propositions (miroir gouvernance)
+- Trésorerie / enveloppes (module ops budget)
+- Votes / propositions (gouvernance interne org)
 - Option **Prisma** sur la même base pour le CV
 
 ## Famille de produits

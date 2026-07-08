@@ -5,12 +5,13 @@ import { ReadOnlyBanner } from "@/components/ReadOnlyBanner";
 import { PageHeader } from "@/components/PageHeader";
 import { StatGrid } from "@/components/StatGrid";
 import { EmptyState } from "@/components/EmptyState";
-import { ActivityModuleBadge } from "@/components/StatusBadge";
+import { ActivityModuleBadge, PlanBadge } from "@/components/StatusBadge";
 import { ChartsPanel } from "./charts-panel";
 import { buildFlexStatusChartData, buildRecSourceChartData } from "@/lib/charts/buildChartData";
 import type { FlexSlotInput, RecCertificateInput } from "@/lib/ops/types";
 import { exportDashboardPdf } from "@/lib/export/actions";
 import { PdfDownloadButton } from "@/components/PdfDownloadButton";
+import { isOrgPro } from "@/lib/billing/client";
 
 export default async function DashboardPage() {
   const session = await getSessionOrg();
@@ -34,6 +35,7 @@ export default async function DashboardPage() {
     { data: recRecent },
     { data: flexForCharts },
     { data: recForCharts },
+    isPro,
   ] = await Promise.all([
     supabase
       .from("flex_slots")
@@ -65,6 +67,7 @@ export default async function DashboardPage() {
       .from("rec_certificates")
       .select("source, quantity_mwh")
       .eq("org_id", orgId),
+    isOrgPro(orgId),
   ]);
 
   const flexStatusData = buildFlexStatusChartData(
@@ -121,11 +124,14 @@ export default async function DashboardPage() {
         title="Tableau de bord"
         description="Pilotage flexibilité et attestations REC (démo Web2, non réglementaire)."
         actions={
-          <PdfDownloadButton
-            label="Exporter PDF"
-            filename="greenops-rapport-ops.pdf"
-            exportFn={exportDashboardPdf}
-          />
+          <div className="flex items-center gap-3">
+            <PlanBadge plan={isPro ? "pro" : "free"} />
+            <PdfDownloadButton
+              label="Exporter PDF"
+              filename="greenops-rapport-ops.pdf"
+              exportFn={exportDashboardPdf}
+            />
+          </div>
         }
       />
 
