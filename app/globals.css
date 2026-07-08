@@ -21,6 +21,7 @@ html.dark {
   --text-muted: #737373;
   --shadow-card: 0 1px 2px rgb(0 0 0 / 0.04), 0 8px 24px rgb(0 0 0 / 0.05);
   --shadow-elevated: 0 16px 48px rgb(0 0 0 / 0.08);
+  --header-glass-bg: rgb(255 255 255 / 0.62);
 }
 
 .dark {
@@ -32,6 +33,7 @@ html.dark {
   --text-muted: #a3a3a3;
   --shadow-card: none;
   --shadow-elevated: 0 16px 48px rgb(0 0 0 / 0.35);
+  --header-glass-bg: rgb(10 10 10 / 0.42);
 }
 
 body {
@@ -765,14 +767,14 @@ body {
   position: sticky;
   top: 0;
   z-index: 40;
-  border-bottom: 1px solid var(--surface-border);
-  background: color-mix(in srgb, var(--surface) 92%, transparent);
-  -webkit-backdrop-filter: blur(8px);
+  border-bottom: 1px solid color-mix(in srgb, var(--surface-border) 85%, transparent);
+  background-color: var(--header-glass-bg);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
 }
 
 @supports (backdrop-filter: blur(1px)) {
   .site-header {
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(16px) saturate(180%);
   }
 }
 
@@ -780,10 +782,6 @@ body {
   min-height: 3.5rem;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-}
-
-.dark .site-header {
-  background: rgb(0 0 0 / 0.72);
 }
 
 .landing-hero {
