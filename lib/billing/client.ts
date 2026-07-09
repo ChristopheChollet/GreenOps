@@ -3,6 +3,30 @@
  * Never import this from a client component — it uses the service key.
  */
 
+export type BillingLine = {
+  id: string;
+  org_id: string;
+  flex_slot_id: string | null;
+  amount_cents: number;
+  kwh: number | null;
+  duration_hours: number | null;
+  unit_price_cents: number | null;
+  pricing_source: string | null;
+  carbon_gco2_kwh: number | null;
+  hp_hc_band: string | null;
+  created_at: string;
+};
+
+export type UsageSummary = {
+  org_id: string;
+  month: string;
+  period_start: string | null;
+  period_end: string | null;
+  line_count: number;
+  total_cents: number;
+  total_kwh: number;
+};
+
 export type SubscriptionStatus = {
   org_id: string;
   plan: "free" | "pro";
@@ -89,4 +113,34 @@ export async function recordUsage(orgId: string, flexSlotId: string): Promise<vo
   } catch {
     // Silently ignored: billing must never break the core flex_slot flow.
   }
+}
+
+export async function getBillingLines(
+  orgId: string,
+  options?: { month?: string; limit?: number },
+): Promise<BillingLine[]> {
+  const params = new URLSearchParams();
+  if (options?.month) params.set("month", options.month);
+  if (options?.limit) params.set("limit", String(options.limit));
+  const query = params.toString();
+  const res = await voltflowFetch(
+    `/api/v1/billing-lines/${orgId}${query ? `?${query}` : ""}`,
+  );
+  if (!res.ok) {
+    throw new Error(`VoltFlow: lignes de facturation indisponibles (${res.status}).`);
+  }
+  const data = (await res.json()) as { lines: BillingLine[] };
+  return data.lines ?? [];
+}
+
+export async function getUsageSummary(
+  orgId: string,
+  month?: string,
+): Promise<UsageSummary> {
+  const query = month ? `?month=${encodeURIComponent(month)}` : "";
+  const res = await voltflowFetch(`/api/v1/usage/${orgId}${query}`);
+  if (!res.ok) {
+    throw new Error(`VoltFlow: résumé usage indisponible (${res.status}).`);
+  }
+  return res.json();
 }
