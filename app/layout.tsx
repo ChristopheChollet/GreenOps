@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "GreenOps — SaaS énergie & climat",
   description:
-    "Pilotage flexibilité et registre REC — console énergie / climat, prototype non réglementaire.",
+    "Pilotage flexibilité, registre REC et facturation Stripe — console énergie / climat, prototype non réglementaire.",
 };
 
 export default function RootLayout({

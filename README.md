@@ -8,14 +8,15 @@ Référence métier longue (checklist notions énergie / climat / Web3) : voir l
 
 ## Captures d'écran
 
-| Landing | Tableau de bord | Flexibilité | Registre REC | Équipe |
-|---|---|---|---|---|
-| ![Landing](docs/screenshots/landing.webp) | ![Tableau de bord](docs/screenshots/dashboard.webp) | ![Flexibilité](docs/screenshots/flex.webp) | ![Registre REC](docs/screenshots/registre.webp) | ![Équipe](docs/screenshots/equipe.webp) |
+| Landing | Tableau de bord | Flexibilité | Registre REC | Équipe | Facturation |
+|---|---|---|---|---|---|
+| ![Landing](docs/screenshots/landing.webp) | ![Tableau de bord](docs/screenshots/dashboard.webp) | ![Flexibilité](docs/screenshots/flex.webp) | ![Registre REC](docs/screenshots/registre.webp) | ![Équipe](docs/screenshots/equipe.webp) | ![Facturation](docs/screenshots/billing.webp) |
 
 ## Stack
 
 - **Next.js** (App Router) + TypeScript + Tailwind
 - **Supabase** : Auth (magic link), PostgreSQL, **Row Level Security**
+- **Stripe** (Checkout, Billing Portal, webhooks) via micro-service billing — page `/billing`
 - **Vercel** (recommandé) + variables d’environnement publiques Supabase
 
 ## Démarrage local
@@ -39,6 +40,9 @@ Référence métier longue (checklist notions énergie / climat / Web3) : voir l
 
 2d. (FlexSlot) Exécuter [`supabase/migrations/004_flexslot_integration.sql`](./supabase/migrations/004_flexslot_integration.sql)  
    — traçabilité GridPulse → GreenOps (`source`, score, fenêtre carbone).
+
+2e. (Facturation) Appliquer la migration VoltFlow [`001_subscriptions.sql`](https://github.com/ChristopheChollet/VoltFlow/blob/main/supabase/migrations/001_subscriptions.sql) sur le **même** projet Supabase (`subscriptions`, `billing_lines`).  
+   Renseigner `VOLTFLOW_API_URL` et `VOLTFLOW_SERVICE_KEY` dans `.env.local` (voir `.env.example`).
 
 3. **Authentication → URL Configuration** : ajouter en redirect URLs :
 
@@ -73,7 +77,8 @@ Ouvrir [http://localhost:3000](http://localhost:3000), **Connexion**, recevoir l
 3. **Registre REC** : créer une fiche, **modifier** ou supprimer, audit, export CSV.  
 4. **Tableau de bord** : KPI, graphiques, **export PDF** (rapport ops) et activité récente.  
 5. **Équipe** (admin) : inviter une adresse e-mail → la personne rejoint l’org à la première connexion.  
-6. (Optionnel) Rôle **viewer** : via invitation ou  
+6. **Facturation** (admin) : page `/billing` — plan Free/Pro, upgrade Stripe (test mode), gate export PDF.  
+7. (Optionnel) Rôle **viewer** : via invitation ou  
    `update public.profiles set role = 'viewer' where user_id = '…';`  
    — l’UI passe en lecture seule.
 
@@ -81,6 +86,7 @@ Ouvrir [http://localhost:3000](http://localhost:3000), **Connexion**, recevoir l
 
 - ~~Multi-utilisateurs par organisation (invitations)~~ — **V2** (page Équipe + migration 003)
 - ~~Export PDF léger~~ — **V2** (rapport ops depuis le tableau de bord)
+- ~~Facturation Stripe (Checkout, gate Pro)~~ — **V2** (page `/billing`, intégration VoltFlow)
 
 ### V3 (optionnel — plus tard)
 

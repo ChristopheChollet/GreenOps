@@ -28,7 +28,7 @@ const steps = [
     id: "action" as const,
     label: "3 · Action",
     name: "GreenOps",
-    description: "flex_slots, audit, équipe",
+    description: "flex_slots, audit, équipe, facturation",
     linkKey: "greenOps" as const,
   },
 ];

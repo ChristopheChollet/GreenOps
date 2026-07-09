@@ -44,6 +44,13 @@ const features: {
     description:
       "Invitations par e-mail, rôles admin/viewer et isolation multi-organisation (RLS).",
   },
+  {
+    module: "billing",
+    href: "/billing",
+    title: "Facturation",
+    description:
+      "Plan Free / Pro, Stripe Checkout, portail abonnement et gate export PDF.",
+  },
 ];
 
 const stack = [
@@ -52,6 +59,7 @@ const stack = [
   "Supabase",
   "PostgreSQL",
   "RLS",
+  "Stripe",
   "pdf-lib",
   "Vercel",
 ];
@@ -82,8 +90,9 @@ export default async function Home() {
             </h1>
             <p className="landing-lead">
               GreenOps est une démo SaaS B2B : authentification Supabase, PostgreSQL
-              avec RLS, modules métier et exports — le pendant produit de GridPulse
-              (data mix &amp; carbone), orienté ops énergie / climat.
+              avec RLS, cinq modules métier (dont facturation Stripe) et exports — le
+              pendant produit de GridPulse (data mix &amp; carbone), orienté ops énergie
+              / climat.
             </p>
             <div className="landing-hero-cta">
               <Link href={ctaHref} className="btn-primary border border-transparent px-6 py-2.5 text-sm">
@@ -127,7 +136,7 @@ export default async function Home() {
             Modules
           </p>
           <h2 id="features-heading" className="mt-2 text-xl font-semibold text-primary">
-            Les quatre pages du produit
+            Les cinq pages du produit
           </h2>
           <p className="landing-modules-lead">
             Même entrées que la navigation — connexion requise (magic link). Chaque

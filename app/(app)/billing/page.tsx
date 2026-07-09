@@ -34,7 +34,7 @@ export default async function BillingPage() {
         module="billing"
         eyebrow="Facturation"
         title="Facturation"
-        description="Abonnement VoltFlow — facturation à l'usage du plan Pro (Stripe test mode)."
+        description="Abonnement organisation — plan Pro via Stripe (mode test), gate export PDF."
       />
 
       {unavailable ? (
