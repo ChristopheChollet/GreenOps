@@ -18,7 +18,7 @@ type Feature = {
   description: string;
 };
 
-const opsFeatures: Feature[] = [
+const productFeatures: Feature[] = [
   {
     module: "dashboard",
     href: "/dashboard",
@@ -40,9 +40,6 @@ const opsFeatures: Feature[] = [
     description:
       "Fiches certificats, volumes MWh, édition et piste d'audit — démo non réglementaire.",
   },
-];
-
-const orgFeatures: Feature[] = [
   {
     module: "team",
     href: "/team",
@@ -123,9 +120,9 @@ export default async function Home() {
             </h1>
             <p className="landing-lead">
               GreenOps est une démo SaaS B2B : authentification Supabase, PostgreSQL
-              avec RLS, cinq modules métier (dont facturation Stripe) et exports — le
-              pendant produit de GridPulse (data mix &amp; carbone), orienté ops énergie
-              / climat.
+              avec RLS, modules métier (facturation Stripe, alertes consolidées) et
+              exports — le pendant produit de GridPulse (data mix &amp; carbone),
+              orienté ops énergie / climat.
             </p>
             <div className="landing-hero-cta">
               <Link href={ctaHref} className="btn-primary border border-transparent px-6 py-2.5 text-sm">
@@ -169,32 +166,18 @@ export default async function Home() {
             Modules
           </p>
           <h2 id="features-heading" className="mt-2 text-xl font-semibold text-primary">
-            Les cinq pages du produit
+            Les pages du produit
           </h2>
           <p className="landing-modules-lead">
             Même entrées que la navigation — connexion requise (magic link). Chaque
             module partage la même organisation et les politiques RLS PostgreSQL.
           </p>
 
-          <div className="feature-groups">
-            <div className="feature-group">
-              <h3 className="feature-group-title">Pilotage ops</h3>
-              <ul className="feature-grid feature-grid-ops">
-                {opsFeatures.map((f) => (
-                  <FeatureCard key={f.href} feature={f} />
-                ))}
-              </ul>
-            </div>
-
-            <div className="feature-group">
-              <h3 className="feature-group-title">Organisation &amp; abonnement</h3>
-              <ul className="feature-grid feature-grid-org">
-                {orgFeatures.map((f) => (
-                  <FeatureCard key={f.href} feature={f} />
-                ))}
-              </ul>
-            </div>
-          </div>
+          <ul className="feature-grid">
+            {productFeatures.map((f) => (
+              <FeatureCard key={f.href} feature={f} />
+            ))}
+          </ul>
           </section>
         </div>
       </main>

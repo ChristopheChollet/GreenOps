@@ -1089,42 +1089,17 @@ h1.landing-title .landing-title-accent {
   color: var(--text-secondary);
 }
 
-.feature-groups {
-  margin-top: 2rem;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.feature-group-title {
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: var(--text-muted);
-}
-
 .feature-grid {
   display: grid;
   gap: 1rem;
   grid-template-columns: 1fr;
   list-style: none;
   padding: 0;
-  margin: 0.875rem 0 0;
+  margin: 1.5rem 0 0;
 }
 
 @media (min-width: 640px) {
-  .feature-grid-ops {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .feature-grid-org {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (min-width: 1024px) {
-  .feature-grid-ops {
+  .feature-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
