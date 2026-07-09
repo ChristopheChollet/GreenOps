@@ -57,6 +57,13 @@ const orgFeatures: Feature[] = [
     description:
       "Plan Free / Pro, Stripe Checkout, portail abonnement et gate export PDF.",
   },
+  {
+    module: "alerts",
+    href: "/alerts",
+    title: "Meridian Alerts",
+    description:
+      "Centre d'alertes consolidé — carbone GridPulse, reco FlexSlot, statut traité.",
+  },
 ];
 
 const stack = [

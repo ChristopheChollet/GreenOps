@@ -424,6 +424,87 @@ body {
   color: #dc2626;
 }
 
+/* Meridian Alerts timeline */
+.alert-timeline {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.alert-timeline-item {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.alert-timeline-marker {
+  width: 0.625rem;
+  height: 0.625rem;
+  margin-top: 1.25rem;
+  border-radius: 9999px;
+  background: var(--text-muted);
+}
+
+.alert-timeline-marker[data-source="gridpulse"] {
+  background: #0891b2;
+}
+
+.alert-timeline-marker[data-source="flexslot"] {
+  background: #ea580c;
+}
+
+.alert-timeline-item-ack .alert-timeline-card {
+  opacity: 0.82;
+}
+
+.alert-source-badge {
+  display: inline-flex;
+  border-radius: 9999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.alert-source-gridpulse {
+  background: color-mix(in srgb, #0891b2 14%, transparent);
+  color: #0891b2;
+}
+
+.alert-source-flexslot {
+  background: color-mix(in srgb, #ea580c 14%, transparent);
+  color: #ea580c;
+}
+
+.alert-action-pill,
+.alert-status-pill {
+  display: inline-flex;
+  border-radius: 9999px;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+.alert-action-pill {
+  background: var(--surface-muted);
+  color: var(--text-secondary);
+}
+
+.alert-status-open {
+  background: color-mix(in srgb, #dc2626 12%, transparent);
+  color: #dc2626;
+}
+
+.alert-status-ack {
+  background: color-mix(in srgb, #059669 12%, transparent);
+  color: #059669;
+}
+
 /* Activity feed */
 .activity-list {
   margin-top: 0.75rem;

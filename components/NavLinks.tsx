@@ -16,6 +16,7 @@ const links: {
   { href: "/registry", label: "REC", title: "Registre REC", module: "registry" },
   { href: "/team", label: "Équipe", title: "Équipe", module: "team" },
   { href: "/billing", label: "Facturation", title: "Facturation", module: "billing" },
+  { href: "/alerts", label: "Alertes", title: "Meridian Alerts", module: "alerts" },
 ];
 
 export function NavLinks() {
