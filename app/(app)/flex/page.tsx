@@ -95,19 +95,6 @@ export default async function FlexPage() {
           <p className="mt-1 text-xs text-muted">
             La fin doit être strictement après le début (ex. début 14:00 → fin 16:00).
           </p>
-          <p className="mt-2 rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-xs text-amber-900 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
-            Pour un créneau avec badge <strong>FlexSlot · Consommer</strong>, utilisez{" "}
-            <a
-              href="http://localhost:3002/recommendations"
-              className="font-medium underline"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              FlexSlot → Créer le slot dans GreenOps
-            </a>
-            . Ce formulaire crée un slot <code className="text-[11px]">source = manual</code> sans
-            traçabilité GridPulse.
-          </p>
           <form
             action={createFlexSlot}
             className="mt-4 grid gap-4 sm:grid-cols-2"
