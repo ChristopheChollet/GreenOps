@@ -920,9 +920,6 @@ h1.landing-title .landing-title-accent {
 
   .feature-grid-org {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    max-width: 42rem;
-    margin-left: auto;
-    margin-right: auto;
   }
 }
 
