@@ -9,6 +9,7 @@ import { AuditMeta } from "@/components/AuditMeta";
 import { ReadOnlyBanner } from "@/components/ReadOnlyBanner";
 import { PageHeader } from "@/components/PageHeader";
 import { EmptyState } from "@/components/EmptyState";
+import { FlexFilters, type FlexFilterKey } from "@/components/FlexFilters";
 import { FlexKindBadge, FlexStatusBadge } from "@/components/StatusBadge";
 import { toDatetimeLocalValue } from "@/lib/datetime";
 import {
@@ -35,15 +36,33 @@ type FlexSlot = {
   updated_by?: string | null;
 };
 
-export default async function FlexPage() {
+export default async function FlexPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ filter?: string }>;
+}) {
   const session = await getSessionOrg();
   const orgId = session?.orgId;
   const isAdmin = session?.role === "admin";
   const supabase = await createClient();
 
   if (!orgId) {
-    return <p className="text-zinc-600">Organisation introuvable.</p>;
+    return (
+      <EmptyState
+        module="flex"
+        title="Organisation introuvable"
+        description="Vérifiez que votre compte est bien lié à une organisation, ou reconnectez-vous."
+        actionHref="/login"
+        actionLabel="Retour à la connexion"
+      />
+    );
   }
+
+  const { filter: rawFilter } = await searchParams;
+  const filter: FlexFilterKey =
+    rawFilter === "open" || rawFilter === "draft" || rawFilter === "flexslot"
+      ? rawFilter
+      : "all";
 
   const { data: rows, error } = await supabase
     .from("flex_slots")
@@ -59,6 +78,13 @@ export default async function FlexPage() {
 
   const slots = (rows ?? []) as FlexSlot[];
   const openCount = slots.filter((s) => s.status === "open").length;
+
+  const visibleSlots = slots.filter((s) => {
+    if (filter === "open") return s.status === "open";
+    if (filter === "draft") return s.status === "draft";
+    if (filter === "flexslot") return isFlexSlotOrigin(s);
+    return true;
+  });
 
   return (
     <div className="space-y-8">
@@ -91,14 +117,17 @@ export default async function FlexPage() {
           <Suspense fallback={null}>
             <FormErrorFromQuery />
           </Suspense>
-          <h2 className="text-lg font-medium text-primary">Nouveau créneau (manuel)</h2>
-          <p className="mt-1 text-xs text-muted">
-            La fin doit être strictement après le début (ex. début 14:00 → fin 16:00).
-          </p>
-          <form
-            action={createFlexSlot}
-            className="mt-4 grid gap-4 sm:grid-cols-2"
-          >
+          <details className="edit-details" open>
+            <summary className="edit-details-summary edit-details-summary-lg">
+              Nouveau créneau (manuel)
+            </summary>
+            <p className="mt-1 text-xs text-muted">
+              La fin doit être strictement après le début (ex. début 14:00 → fin 16:00).
+            </p>
+            <form
+              action={createFlexSlot}
+              className="edit-details-form mt-4 grid gap-4 sm:grid-cols-2"
+            >
             <div className="form-field">
               <label className="form-label">Type</label>
               <select name="kind" className="input-field">
@@ -150,12 +179,16 @@ export default async function FlexPage() {
                 Enregistrer
               </button>
             </div>
-          </form>
+            </form>
+          </details>
         </section>
       )}
 
       <section>
-        <h2 className="text-lg font-medium text-primary">Créneaux</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-lg font-medium text-primary">Créneaux</h2>
+          {slots.length > 0 && <FlexFilters active={filter} />}
+        </div>
         {slots.length === 0 ? (
           <EmptyState
             module="flex"
@@ -166,9 +199,17 @@ export default async function FlexPage() {
                 : "Aucun créneau n’a encore été enregistré pour cette organisation."
             }
           />
+        ) : visibleSlots.length === 0 ? (
+          <EmptyState
+            module="flex"
+            title="Aucun créneau pour ce filtre"
+            description="Essayez un autre filtre, ou revenez à « Tous » pour voir l'ensemble des créneaux."
+            actionHref="/flex"
+            actionLabel="Voir tous les créneaux"
+          />
         ) : (
           <ul className="card-grid mt-3">
-            {slots.map((s) => (
+            {visibleSlots.map((s) => (
               <li
                 key={s.id}
                 id={`slot-${s.id}`}

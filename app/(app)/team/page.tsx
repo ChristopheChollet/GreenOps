@@ -38,7 +38,15 @@ export default async function TeamPage() {
   const supabase = await createClient();
 
   if (!orgId) {
-    return <p className="text-zinc-600">Organisation introuvable.</p>;
+    return (
+      <EmptyState
+        module="team"
+        title="Organisation introuvable"
+        description="Vérifiez que votre compte est bien lié à une organisation, ou reconnectez-vous."
+        actionHref="/login"
+        actionLabel="Retour à la connexion"
+      />
+    );
   }
 
   const [{ data: members }, { data: invites }] = await Promise.all([

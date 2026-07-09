@@ -5,6 +5,7 @@ import { ReadOnlyBanner } from "@/components/ReadOnlyBanner";
 import { PageHeader } from "@/components/PageHeader";
 import { StatGrid } from "@/components/StatGrid";
 import { EmptyState } from "@/components/EmptyState";
+import { ErrorState } from "@/components/ErrorState";
 import { ActivityModuleBadge, PlanBadge } from "@/components/StatusBadge";
 import { ChartsPanel } from "./charts-panel";
 import { buildFlexStatusChartData, buildRecSourceChartData } from "@/lib/charts/buildChartData";
@@ -20,10 +21,12 @@ export default async function DashboardPage() {
 
   if (!orgId) {
     return (
-      <p className="text-zinc-600">
-        Profil ou organisation introuvable. Vérifiez que la migration SQL et
-        le trigger `handle_new_user` sont appliqués sur Supabase.
-      </p>
+      <ErrorState
+        title="Profil ou organisation introuvable"
+        description="Vérifiez que la migration SQL et le trigger de création de profil sont bien appliqués sur Supabase."
+        actionHref="/login"
+        actionLabel="Retour à la connexion"
+      />
     );
   }
 

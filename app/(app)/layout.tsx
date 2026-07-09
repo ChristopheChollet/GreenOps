@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import { AppNav } from "@/components/AppNav";
 import { AppFooter } from "@/components/AppFooter";
 import { ToastFromQuery } from "@/components/ToastFromQuery";
+import { MeridianJourneyBar } from "@/components/MeridianJourneyBar";
 
 export default async function AppLayout({
   children,
@@ -25,6 +26,7 @@ export default async function AppLayout({
         <ToastFromQuery />
       </Suspense>
       <AppNav />
+      <MeridianJourneyBar current="greenops" />
       <main id="main-content" className="app-main mx-auto w-full max-w-5xl flex-1 px-4 py-8">
         {children}
       </main>

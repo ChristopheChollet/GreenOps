@@ -6,6 +6,7 @@ import {
   getUsageSummary,
 } from "@/lib/billing/client";
 import { PageHeader } from "@/components/PageHeader";
+import { EmptyState } from "@/components/EmptyState";
 import { BillingCheckoutBanner } from "@/components/billing/BillingCheckoutBanner";
 import { BillingLinesTable } from "@/components/billing/BillingLinesTable";
 import { PlanCards } from "@/components/billing/PlanCards";
@@ -16,7 +17,15 @@ const ACTIVE_STATUSES = new Set(["active", "trialing"]);
 export default async function BillingPage() {
   const session = await getSessionOrg();
   if (!session) {
-    return <p className="text-zinc-600">Non authentifié.</p>;
+    return (
+      <EmptyState
+        module="billing"
+        title="Non authentifié"
+        description="Votre session a expiré ou n'est plus valide. Reconnectez-vous pour accéder à la facturation."
+        actionHref="/login"
+        actionLabel="Se reconnecter"
+      />
+    );
   }
 
   let plan: "free" | "pro" = "free";

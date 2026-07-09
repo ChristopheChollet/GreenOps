@@ -36,7 +36,15 @@ export default async function RegistryPage() {
   const supabase = await createClient();
 
   if (!orgId) {
-    return <p className="text-zinc-600">Organisation introuvable.</p>;
+    return (
+      <EmptyState
+        module="registry"
+        title="Organisation introuvable"
+        description="Vérifiez que votre compte est bien lié à une organisation, ou reconnectez-vous."
+        actionHref="/login"
+        actionLabel="Retour à la connexion"
+      />
+    );
   }
 
   const { data: rows } = await supabase

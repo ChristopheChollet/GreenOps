@@ -27,7 +27,7 @@ export function ToastFromQuery() {
     if (!message || !toastKey) return;
     const hideTimer = window.setTimeout(() => setDismissedKey(toastKey), 4000);
     const cleanTimer = window.setTimeout(() => {
-      router.replace(pathname, { scroll: false });
+      router.replace(`${pathname}${window.location.hash}`, { scroll: false });
     }, 4200);
     return () => {
       window.clearTimeout(hideTimer);

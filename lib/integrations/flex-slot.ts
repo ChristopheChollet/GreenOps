@@ -126,5 +126,6 @@ export function assertIntegrationOrgAllowed(orgId: string): string | null {
 export function buildGreenOpsFlexUrl(slotId?: string): string {
   const site = process.env.NEXT_PUBLIC_SITE_URL?.trim() || "http://localhost:3000";
   const base = `${site.replace(/\/$/, "")}/flex`;
-  return slotId ? `${base}#slot-${slotId}` : base;
+  if (!slotId) return base;
+  return `${base}?toast=flex-created#slot-${slotId}`;
 }
