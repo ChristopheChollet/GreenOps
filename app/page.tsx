@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { AppFooter } from "@/components/AppFooter";
 import { HeroLivePreview } from "@/components/HeroLivePreview";
 import { ModuleIcon } from "@/components/ModuleIcon";
+import { MeridianJourneyBar } from "@/components/MeridianJourneyBar";
 import { OpsChain } from "@/components/OpsChain";
 import { getEcosystemLinks, getRepoUrl } from "@/lib/site";
 import { moduleTheme, type ModuleKey } from "@/lib/moduleTheme";
@@ -101,6 +102,7 @@ export default async function Home() {
   return (
     <>
       <SiteHeader />
+      <MeridianJourneyBar current="greenops" />
 
       <main id="main-content" className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">
         <div className="pb-16">
