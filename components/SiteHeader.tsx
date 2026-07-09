@@ -15,8 +15,12 @@ export function SiteHeader({ showNav = true }: { showNav?: boolean }) {
             <span className="brand-lockup-sub">Ops énergie</span>
           </span>
         </Link>
-        <div className="flex items-center gap-2 sm:gap-3">
-          {showNav ? <NavLinks /> : null}
+        <div className="flex min-w-0 flex-1 items-center justify-end gap-2 sm:gap-3">
+          {showNav ? (
+            <div className="header-nav-scroll min-w-0">
+              <NavLinks />
+            </div>
+          ) : null}
           <ThemeToggle />
         </div>
       </div>

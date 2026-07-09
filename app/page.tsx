@@ -10,12 +10,14 @@ import { moduleTheme, type ModuleKey } from "@/lib/moduleTheme";
 
 export const dynamic = "force-dynamic";
 
-const features: {
+type Feature = {
   module: ModuleKey;
   href: string;
   title: string;
   description: string;
-}[] = [
+};
+
+const opsFeatures: Feature[] = [
   {
     module: "dashboard",
     href: "/dashboard",
@@ -37,6 +39,9 @@ const features: {
     description:
       "Fiches certificats, volumes MWh, édition et piste d'audit — démo non réglementaire.",
   },
+];
+
+const orgFeatures: Feature[] = [
   {
     module: "team",
     href: "/team",
@@ -63,6 +68,25 @@ const stack = [
   "pdf-lib",
   "Vercel",
 ];
+
+function FeatureCard({ feature }: { feature: Feature }) {
+  const theme = moduleTheme[feature.module];
+  return (
+    <li className="h-full">
+      <Link href={feature.href} className="feature-card feature-card-link">
+        <span
+          className="feature-card-icon"
+          style={{ color: theme.color, backgroundColor: theme.tint }}
+          aria-hidden
+        >
+          <ModuleIcon module={feature.module} size={24} />
+        </span>
+        <h3 className="feature-card-title">{feature.title}</h3>
+        <p className="feature-card-desc">{feature.description}</p>
+      </Link>
+    </li>
+  );
+}
 
 export default async function Home() {
   const supabase = await createClient();
@@ -142,26 +166,26 @@ export default async function Home() {
             Même entrées que la navigation — connexion requise (magic link). Chaque
             module partage la même organisation et les politiques RLS PostgreSQL.
           </p>
-          <ul className="feature-grid">
-            {features.map((f) => {
-              const theme = moduleTheme[f.module];
-              return (
-                <li key={f.href} className="h-full">
-                  <Link href={f.href} className="feature-card feature-card-link">
-                    <span
-                      className="feature-card-icon"
-                      style={{ color: theme.color, backgroundColor: theme.tint }}
-                      aria-hidden
-                    >
-                      <ModuleIcon module={f.module} size={24} />
-                    </span>
-                    <h3 className="feature-card-title">{f.title}</h3>
-                    <p className="feature-card-desc">{f.description}</p>
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+
+          <div className="feature-groups">
+            <div className="feature-group">
+              <h3 className="feature-group-title">Pilotage ops</h3>
+              <ul className="feature-grid feature-grid-ops">
+                {opsFeatures.map((f) => (
+                  <FeatureCard key={f.href} feature={f} />
+                ))}
+              </ul>
+            </div>
+
+            <div className="feature-group">
+              <h3 className="feature-group-title">Organisation &amp; abonnement</h3>
+              <ul className="feature-grid feature-grid-org">
+                {orgFeatures.map((f) => (
+                  <FeatureCard key={f.href} feature={f} />
+                ))}
+              </ul>
+            </div>
+          </div>
           </section>
         </div>
       </main>

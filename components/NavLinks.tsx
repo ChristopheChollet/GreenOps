@@ -5,19 +5,24 @@ import { usePathname } from "next/navigation";
 import type { ModuleKey } from "@/lib/moduleTheme";
 import { moduleTheme } from "@/lib/moduleTheme";
 
-const links: { href: string; label: string; module: ModuleKey }[] = [
-  { href: "/dashboard", label: "Tableau de bord", module: "dashboard" },
-  { href: "/flex", label: "Flexibilité", module: "flex" },
-  { href: "/registry", label: "Registre REC", module: "registry" },
-  { href: "/team", label: "Équipe", module: "team" },
-  { href: "/billing", label: "Facturation", module: "billing" },
+const links: {
+  href: string;
+  label: string;
+  title: string;
+  module: ModuleKey;
+}[] = [
+  { href: "/dashboard", label: "Dashboard", title: "Tableau de bord", module: "dashboard" },
+  { href: "/flex", label: "Flexibilité", title: "Flexibilité", module: "flex" },
+  { href: "/registry", label: "REC", title: "Registre REC", module: "registry" },
+  { href: "/team", label: "Équipe", title: "Équipe", module: "team" },
+  { href: "/billing", label: "Facturation", title: "Facturation", module: "billing" },
 ];
 
 export function NavLinks() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex flex-wrap items-center gap-1" aria-label="Navigation principale">
+    <nav className="nav-links" aria-label="Navigation principale">
       {links.map((l) => {
         const active = pathname === l.href || pathname.startsWith(`${l.href}/`);
         const color = moduleTheme[l.module].color;
@@ -27,6 +32,7 @@ export function NavLinks() {
             href={l.href}
             className={`nav-link${active ? " nav-link-active" : ""}`}
             aria-current={active ? "page" : undefined}
+            title={l.title}
           >
             <span
               className="nav-dot"
