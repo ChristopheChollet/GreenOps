@@ -88,7 +88,7 @@ export function MeridianTourGate({ app }: { app: TourApp }) {
         overlayClickBehavior: "close",
         nextBtnText: "Suivant →",
         doneBtnText: "Terminer",
-        showButtons: isLast ? ["close"] : ["next", "close"],
+        showButtons: isLast ? ["next"] : ["next", "close"],
         onPopoverRender: (popoverDom) => {
           if (popoverDom.progress) {
             popoverDom.progress.textContent = `${step.progress} / ${TOUR_STEPS.length}`;
