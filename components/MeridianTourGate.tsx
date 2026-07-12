@@ -19,20 +19,26 @@ export function MeridianTourGate({ app }: { app: TourApp }) {
 
   useEffect(() => {
     hasRun.current = false;
-    setFallbackHref(null);
-  }, [searchParams, pathname]);
+    const resetTimer = window.setTimeout(() => setFallbackHref(null), 0);
 
-  useEffect(() => {
-    if (searchParams.get("tour") !== "1") return;
+    if (searchParams.get("tour") !== "1") {
+      return () => window.clearTimeout(resetTimer);
+    }
 
     const stepId =
       searchParams.get("step") ??
       TOUR_STEPS.find((step) => step.app === app)?.id;
-    if (!stepId) return;
+    if (!stepId) {
+      return () => window.clearTimeout(resetTimer);
+    }
 
     const step = getStep(stepId);
-    if (!step || step.app !== app) return;
-    if (!pathname.startsWith(step.path)) return;
+    if (!step || step.app !== app) {
+      return () => window.clearTimeout(resetTimer);
+    }
+    if (!pathname.startsWith(step.path)) {
+      return () => window.clearTimeout(resetTimer);
+    }
 
     const nextHref = resolveTourNavigation(step.id);
     const isLast = !nextHref;
@@ -112,7 +118,10 @@ export function MeridianTourGate({ app }: { app: TourApp }) {
       driverObj.drive();
     }, 200);
 
-    return () => window.clearInterval(timer);
+    return () => {
+      window.clearTimeout(resetTimer);
+      window.clearInterval(timer);
+    };
   }, [app, pathname, searchParams]);
 
   if (!fallbackHref) return null;

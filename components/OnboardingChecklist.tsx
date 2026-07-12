@@ -20,7 +20,10 @@ export function OnboardingChecklist({ status }: { status: OnboardingStatus }) {
   const [dismissed, setDismissed] = useState(true);
 
   useEffect(() => {
-    setDismissed(localStorage.getItem(DISMISS_KEY) === "1");
+    const timer = window.setTimeout(() => {
+      setDismissed(localStorage.getItem(DISMISS_KEY) === "1");
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, []);
 
   if (searchParams.get("tour") === "1") return null;
