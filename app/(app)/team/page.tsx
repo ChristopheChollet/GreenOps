@@ -4,6 +4,7 @@ import { Suspense } from "react";
 import {
   cancelOrgInvitation,
   createOrgInvitation,
+  updateOrgName,
 } from "@/lib/team/actions";
 import { FormErrorFromQuery } from "@/components/FormErrorFromQuery";
 import { ReadOnlyBanner } from "@/components/ReadOnlyBanner";
@@ -29,6 +30,8 @@ const TEAM_ERRORS: Record<string, string> = {
   "invite-member": "Cette personne fait déjà partie de l’organisation.",
   "invite-pending": "Une invitation est déjà en attente pour cette adresse.",
   "invite-save": "Impossible d’enregistrer l’invitation. Réessayez.",
+  "org-name-invalid": "Le nom doit contenir entre 2 et 80 caractères.",
+  "org-name-save": "Impossible de mettre à jour l’organisation. Réessayez.",
 };
 
 export default async function TeamPage() {
@@ -49,7 +52,7 @@ export default async function TeamPage() {
     );
   }
 
-  const [{ data: members }, { data: invites }] = await Promise.all([
+  const [{ data: members }, { data: invites }, { data: org }] = await Promise.all([
     supabase.rpc("list_org_members"),
     supabase
       .from("org_invitations")
@@ -57,7 +60,10 @@ export default async function TeamPage() {
       .eq("org_id", orgId)
       .is("accepted_at", null)
       .order("created_at", { ascending: false }),
+    supabase.from("organizations").select("name").eq("id", orgId).single(),
   ]);
+
+  const orgName = (org?.name as string | undefined) ?? "My organization";
 
   const memberRows = (members ?? []) as MemberRow[];
   const inviteRows = (invites ?? []) as InviteRow[];
@@ -74,7 +80,37 @@ export default async function TeamPage() {
       {session?.role === "viewer" && <ReadOnlyBanner />}
 
       {isAdmin && (
-        <section className="section-card">
+        <section id="org-name" className="section-card scroll-mt-24">
+          <h2 className="text-lg font-medium text-primary">Organisation</h2>
+          <p className="mt-1 text-xs text-muted">
+            Nom affiché dans les exports PDF et le pilotage ops.
+          </p>
+          <form action={updateOrgName} className="mt-4 flex flex-wrap items-end gap-4">
+            <div className="form-field min-w-[14rem] flex-1">
+              <label className="form-label" htmlFor="org-name-input">
+                Nom
+              </label>
+              <input
+                id="org-name-input"
+                type="text"
+                name="name"
+                required
+                minLength={2}
+                maxLength={80}
+                defaultValue={orgName}
+                placeholder="Meridian Ops Demo"
+                className="input-field"
+              />
+            </div>
+            <button type="submit" className="btn-primary px-4 py-2 text-sm">
+              Enregistrer
+            </button>
+          </form>
+        </section>
+      )}
+
+      {isAdmin && (
+        <section id="invite" className="section-card scroll-mt-24">
           <Suspense fallback={null}>
             <FormErrorFromQuery customMessages={TEAM_ERRORS} />
           </Suspense>

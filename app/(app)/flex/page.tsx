@@ -184,7 +184,7 @@ export default async function FlexPage({
         </section>
       )}
 
-      <section>
+      <section data-tour="flex-slots">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-lg font-medium text-primary">Créneaux</h2>
           {slots.length > 0 && <FlexFilters active={filter} />}

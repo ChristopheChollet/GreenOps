@@ -12,6 +12,7 @@ const MESSAGES: Record<string, string> = {
   "rec-deleted": "Fiche REC supprimée.",
   "invite-created": "Invitation enregistrée.",
   "invite-cancelled": "Invitation annulée.",
+  "org-updated": "Nom de l’organisation mis à jour.",
 };
 
 export function ToastFromQuery() {

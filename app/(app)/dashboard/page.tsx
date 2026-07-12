@@ -13,6 +13,7 @@ import type { FlexSlotInput, RecCertificateInput } from "@/lib/ops/types";
 import { exportDashboardPdf } from "@/lib/export/actions";
 import { PdfDownloadButton } from "@/components/PdfDownloadButton";
 import { isOrgPro } from "@/lib/billing/client";
+import { OnboardingChecklistGate } from "@/components/OnboardingChecklistGate";
 
 export default async function DashboardPage() {
   const session = await getSessionOrg();
@@ -139,6 +140,8 @@ export default async function DashboardPage() {
       />
 
       {session?.role === "viewer" && <ReadOnlyBanner />}
+
+      <OnboardingChecklistGate orgId={orgId} role={session.role} />
 
       <StatGrid
         items={[

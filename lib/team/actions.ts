@@ -8,6 +8,31 @@ import { redirect } from "next/navigation";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+export async function updateOrgName(formData: FormData) {
+  await requireAdmin();
+  const orgId = await getSessionOrgId();
+  if (!orgId) throw new Error("Non authentifié");
+
+  const name = String(formData.get("name") ?? "").trim();
+  if (name.length < 2 || name.length > 80) {
+    redirect("/team?error=org-name-invalid");
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("organizations")
+    .update({ name })
+    .eq("id", orgId);
+
+  if (error) {
+    redirect("/team?error=org-name-save");
+  }
+
+  revalidatePath("/team");
+  revalidatePath("/dashboard");
+  redirect("/team?toast=org-updated");
+}
+
 export async function createOrgInvitation(formData: FormData) {
   await requireAdmin();
   const orgId = await getSessionOrgId();

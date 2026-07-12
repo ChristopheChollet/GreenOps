@@ -1244,6 +1244,119 @@ h1.landing-title .landing-title-accent {
   background: rgb(38 38 38);
 }
 
+.onboarding-card {
+  border-radius: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--accent-emerald) 35%, var(--surface-border));
+  background: color-mix(in srgb, var(--accent-emerald) 8%, var(--surface));
+  padding: 1.25rem;
+}
+
+.onboarding-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.onboarding-eyebrow {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-emerald);
+}
+
+.onboarding-title {
+  margin-top: 0.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.onboarding-desc {
+  margin-top: 0.375rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.onboarding-dismiss {
+  flex-shrink: 0;
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.onboarding-dismiss:hover {
+  color: var(--text-primary);
+}
+
+.onboarding-steps {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.onboarding-step {
+  display: flex;
+  gap: 0.75rem;
+  border-radius: 0.625rem;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  padding: 0.875rem;
+}
+
+.onboarding-step-current {
+  border-color: color-mix(in srgb, var(--accent-emerald) 45%, var(--surface-border));
+}
+
+.onboarding-step-done {
+  opacity: 0.72;
+}
+
+.onboarding-step-index {
+  display: inline-flex;
+  height: 1.75rem;
+  width: 1.75rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  background: var(--surface-muted);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.onboarding-step-done .onboarding-step-index {
+  background: color-mix(in srgb, var(--accent-emerald) 18%, transparent);
+  color: var(--accent-emerald);
+}
+
+.onboarding-step-current .onboarding-step-index {
+  background: color-mix(in srgb, var(--accent-emerald) 20%, transparent);
+  color: var(--accent-emerald);
+}
+
+.onboarding-step-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.onboarding-step-desc {
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.onboarding-step-action {
+  display: inline-block;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
 .alert-error {
   border: 1px solid rgb(254 202 202);
   background: rgb(254 242 242);
@@ -1556,5 +1669,28 @@ h1.landing-title .landing-title-accent {
   color: var(--text-muted);
   font-size: 1.25rem;
   text-align: center;
+}
+
+.tour-fallback-banner {
+  position: fixed;
+  bottom: 1rem;
+  left: 50%;
+  z-index: 100000;
+  max-width: 28rem;
+  transform: translateX(-50%);
+  border-radius: 0.5rem;
+  border: 1px solid var(--surface-border);
+  background: var(--surface);
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+.tour-fallback-link {
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  color: var(--accent-emerald);
 }
 

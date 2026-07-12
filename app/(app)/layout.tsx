@@ -5,6 +5,7 @@ import { AppNav } from "@/components/AppNav";
 import { AppFooter } from "@/components/AppFooter";
 import { ToastFromQuery } from "@/components/ToastFromQuery";
 import { MeridianJourneyBar } from "@/components/MeridianJourneyBar";
+import { MeridianTourGate } from "@/components/MeridianTourGate";
 
 export default async function AppLayout({
   children,
@@ -24,6 +25,9 @@ export default async function AppLayout({
     <>
       <Suspense fallback={null}>
         <ToastFromQuery />
+      </Suspense>
+      <Suspense fallback={null}>
+        <MeridianTourGate app="greenops" />
       </Suspense>
       <AppNav />
       <MeridianJourneyBar current="greenops" />
